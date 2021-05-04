@@ -1,12 +1,28 @@
 import React from 'react';
-import {SafeAreaView, Text } from 'react-native';
+import {SafeAreaView, TextInput, View} from 'react-native';
+import Header from './Header.jsx';
+import {AddButton, EditButton, RemoveButton} from './Buttons.jsx';
+
+import Svg, {Path} from 'react-native-svg';
 
 import styles from './stylesheet.js';
 
 export default function App() {
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <Text style={styles.title}>Open up App.js to start working on your app!</Text>
+      <Header/>
+      <View>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Pesquisar"
+        />
+        <Svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <Path d="M15.6184 13.7312L12.5219 10.6347C13.4648 9.22338 13.8489 7.51181 13.5997 5.83292C13.3504 4.15404 12.4856 2.62788 11.1735 1.55131C9.86129 0.474747 8.19559 -0.0752538 6.50036 0.00829423C4.80513 0.0918423 3.20158 0.802966 2.00163 2.00334C0.801681 3.20372 0.0911243 4.80751 0.00817561 6.50277C-0.0747731 8.19803 0.475817 9.86353 1.55285 11.1753C2.62988 12.4871 4.15634 13.3514 5.83532 13.6C7.51429 13.8487 9.22573 13.4639 10.6367 12.5206L13.7332 15.6164C13.9853 15.8623 14.3236 16 14.6758 16C15.028 16 15.3663 15.8623 15.6184 15.6164C15.8684 15.3664 16.0088 15.0273 16.0088 14.6738C16.0088 14.3203 15.8684 13.9812 15.6184 13.7312ZM6.84297 2.00794C7.79885 2.00794 8.73327 2.29139 9.52806 2.82245C10.3228 3.35351 10.9423 4.10833 11.3081 4.99145C11.6739 5.87456 11.7696 6.84632 11.5831 7.78384C11.3966 8.72135 10.9363 9.58252 10.2604 10.2584C9.58453 10.9343 8.72336 11.3946 7.78585 11.5811C6.84833 11.7676 5.87657 11.6719 4.99346 11.3061C4.11034 10.9403 3.35552 10.3208 2.82446 9.52605C2.2934 8.73126 2.00995 7.79684 2.00995 6.84096C2.01136 5.5596 2.52101 4.33112 3.42707 3.42506C4.33313 2.519 5.56161 2.00935 6.84297 2.00794Z" fill="#C2CFD6"/>
+        </Svg>
+      </View>
+      <AddButton/>
+      <EditButton/>
+      <RemoveButton/>
     </SafeAreaView>
   );
 }
