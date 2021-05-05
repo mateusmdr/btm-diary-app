@@ -2,7 +2,7 @@ import React from 'react';
 import {View,Text} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import styles from "./stylesheet";
+import styles from "./assets/stylesheet";
 
 const Header = () => {
 
