@@ -96,6 +96,32 @@ const styles = StyleSheet.create({
     },
     removeButton: {
         backgroundColor: '#BCBCBC',
+    },
+    buildingList: {
+        paddingLeft: 9*vw,
+        paddingRight: 9*vw,
+        paddingTop: 4*vh,
+
+        paddingBottom: 50,
+        height: 75*vh,
+    },
+    building: {
+        paddingBottom: 3*vh,
+        width: 82*vw,
+        alignItems: 'center',
+        
+
+    },
+    buildingH1: {
+        fontFamily: 'OpenSans',
+        fontSize: 18,
+        borderWidth: 2,
+        borderRadius: 4,
+        borderColor: 'rgba(159, 159, 159, 0.25)',
+        paddingTop: 2*vh,
+        paddingBottom: 2*vh,
+        paddingLeft: 10*vw,
+        paddingRight: 10*vw,
     }
 });
 

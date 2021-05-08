@@ -11,6 +11,12 @@ npm-debug.*
 web-build/
 babel.config.js
 package-lock.json
+android/
+ios/
+.buckconfig
+.gitattributes
+metro.config.js
+yarn.lock
 
 # macOS
 .DS_Store

@@ -70,4 +70,32 @@ const SearchImg = (props) => {
   );
 }
 
-export {AddImg,EditImg,RemoveImg,SearchImg};
+const ArrowImg = (props) => {
+  return (
+    <Svg
+      width={props.width}
+      height={props.height}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={props.style}
+    >
+      <Path
+        d="M15.8333 10H4.16663"
+        stroke="#C2CFD6"
+        strokeWidth={2.4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M9.99996 15.8334L4.16663 10L9.99996 4.16669"
+        stroke="#C2CFD6"
+        strokeWidth={2.4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}
+
+export {AddImg,EditImg,RemoveImg,SearchImg,ArrowImg};
