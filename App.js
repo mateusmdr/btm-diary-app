@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
-import {SafeAreaView} from 'react-native';
 import {useFonts} from 'expo-font';
-import $ from 'jquery';
 
 /*Pages*/
-import {HomePage,AddBuildingPage} from './Pages';
+import {HomePage,AddBuildingPage,ViewBuildingPage, EditBuildingPage, ViewDiaryPage, AddDiaryPage} from './Pages';
 
 import styles from './assets/stylesheet.js';
 
@@ -161,21 +159,60 @@ const App = function App() {
 
   const [currentPage, setCurrentPage] = useState("home");
 
+  const [currentBuilding, setCurrentBuilding] = useState(null);
+  const [currentDiary, setCurrentDiary] = useState(0);
+
   if (!loaded) return null;
 
   if (currentPage === "home" ){
     return (
-      <SafeAreaView style={styles.safeAreaView}>
-        <HomePage data={buildings} setCurrentPage={(newPage) => setCurrentPage(newPage)}/>
-      </SafeAreaView>
+      <HomePage 
+        data={buildings} 
+        setCurrentPage={setCurrentPage}
+        setCurrentBuilding={setCurrentBuilding}
+      />
     );
   }
 
   if (currentPage === "addBuilding"){
     return(
-      <SafeAreaView style={styles.safeAreaView}>
-        <AddBuildingPage data={buildings} setCurrentPage={(newPage) => setCurrentPage(newPage)}/>
-      </SafeAreaView>
+      <AddBuildingPage 
+        data={buildings} 
+        setCurrentPage={setCurrentPage}
+      />
+    );
+  }
+
+  if (currentPage === "viewBuilding"){
+    return(
+      <ViewBuildingPage 
+        setCurrentPage={setCurrentPage} 
+        currentBuilding={currentBuilding}        
+      />
+    )
+  }
+
+  if (currentPage === "editBuilding"){
+    return (
+      <EditBuildingPage
+
+      />
+    )
+  }
+
+  if (currentPage === "addDiary"){
+    return (
+      <AddDiaryPage
+
+      />
+    );
+  }
+
+  if (currentPage === "viewDiary") {
+    return (
+      <ViewDiaryPage
+
+      />
     );
   }
   

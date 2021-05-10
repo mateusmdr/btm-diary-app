@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, TouchableHighlight} from 'react-native';
+import {StyleSheet,View, TouchableHighlight,TouchableWithoutFeedback} from 'react-native';
 import styles from './assets/stylesheet.js';
 
 import {AddImg,EditImg,RemoveImg,ArrowImg} from './assets/SvgComponents.jsx';
@@ -20,7 +20,7 @@ const EditButton = (props) => {
     );
 };
 
-const RemoveButton = () => {
+const RemoveButton = (props) => {
     return (
         <TouchableHighlight style={StyleSheet.compose(styles.button,styles.removeButton)} onPress={props.onClick}>
             <RemoveImg width={styles.buttonImg.width} height={styles.buttonImg.height}/>
@@ -28,11 +28,13 @@ const RemoveButton = () => {
     );
 };
 
-const ArrowButton = () => {
+const ArrowButton = (props) => {
     return (
-        <TouchableHighlight style={styles.button,styles.removeButton} onPress={props.onClick}>
-            <ArrowImg width={styles.buttonImg.width} height={styles.buttonImg.height}/>
-        </TouchableHighlight>
+        <TouchableWithoutFeedback onPress={props.onClick}>
+            <View style={StyleSheet.compose(styles.button,styles.arrowButton)}>
+                <ArrowImg width={styles.arrowButton.width} height={styles.arrowButton.height}/>
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
 

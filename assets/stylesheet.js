@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderBottomLeftRadius: 6*vw,
         borderBottomRightRadius: 6*vw,
+        marginBottom: 4*vh,
     },
     headerHGroup: {
         textAlign: 'right',
@@ -50,7 +51,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: 82*vw,
-        marginTop: 4*vh,
     },
     textInput: {
         height: 7.8*vh,
@@ -96,6 +96,12 @@ const styles = StyleSheet.create({
     },
     removeButton: {
         backgroundColor: '#BCBCBC',
+    },
+    arrowButton: {
+        width: 30,
+        height: 30,
+        alignSelf: 'flex-start',
+        paddingLeft: 30+3*vw,
     },
     buildingList: {
         paddingLeft: 9*vw,
