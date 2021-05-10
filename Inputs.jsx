@@ -7,10 +7,10 @@ import styles from './assets/stylesheet.js';
 const SearchBar = () => {
     
     return(
-        <View style={styles.searchBar}>
+        <View style={styles.textInputView}>
             <SearchImg width={styles.searchImg.width} height={styles.searchImg.height} style={styles.searchImg}/>
             <TextInput
-                style={styles.textInput}
+                style={styles.searchBar}
                 placeholder="Pesquisar"
                 underlineColorAndroid="transparent"
             />

@@ -15,7 +15,7 @@ const App = function App() {
   const initialBuildings = [
     {
       "key": "1",
-      "name": "Nome da obra",
+      "name": "Nome da Obra",
       "diaries": [
         {
           "date": "Data do diário",
@@ -29,7 +29,7 @@ const App = function App() {
     },
     {
       "key": "2",
-      "name": "Nome da obra",
+      "name": "Nome da Obra",
       "diaries": [
         {
           "date": "Data do diário",
@@ -43,7 +43,7 @@ const App = function App() {
     },
     {
       "key": "3",
-      "name": "Nome da obra",
+      "name": "Nome da Obra",
       "diaries": [
         {
           "date": "Data do diário",
@@ -57,7 +57,7 @@ const App = function App() {
     },
     {
       "key": "4",
-      "name": "Nome da obra",
+      "name": "Nome da Obra",
       "diaries": [
         {
           "date": "Data do diário",
@@ -71,7 +71,7 @@ const App = function App() {
     },
     {
       "key": "5",
-      "name": "Nome da obra",
+      "name": "Nome da Obra",
       "diaries": [
         {
           "date": "Data do diário",
@@ -85,7 +85,7 @@ const App = function App() {
     },
     {
       "key": "6",
-      "name": "Nome da obra",
+      "name": "Nome da Obra",
       "diaries": [
         {
           "date": "Data do diário",
@@ -99,7 +99,7 @@ const App = function App() {
     },
     {
       "key": "7",
-      "name": "Nome da obra",
+      "name": "Nome da Obra",
       "diaries": [
         {
           "date": "Data do diário",
@@ -113,7 +113,7 @@ const App = function App() {
     },
     {
       "key": "8",
-      "name": "Nome da obra",
+      "name": "Nome da Obra",
       "diaries": [
         {
           "date": "Data do diário",
@@ -127,7 +127,7 @@ const App = function App() {
     },
     {
       "key": "9",
-      "name": "Nome da obra",
+      "name": "Nome da Obra",
       "diaries": [
         {
           "date": "Data do diário",
@@ -141,7 +141,7 @@ const App = function App() {
     },
     {
       "key": "10",
-      "name": "Nome da obra",
+      "name": "Nome da Obra",
       "diaries": [
         {
           "date": "Data do diário",
@@ -195,7 +195,8 @@ const App = function App() {
   if (currentPage === "editBuilding"){
     return (
       <EditBuildingPage
-
+        setCurrentPage={setCurrentPage}
+        currentBuilding={currentBuilding}
       />
     )
   }
@@ -203,7 +204,8 @@ const App = function App() {
   if (currentPage === "addDiary"){
     return (
       <AddDiaryPage
-
+        setCurrentPage={setCurrentPage}
+        currentBuilding={currentBuilding}
       />
     );
   }
@@ -211,7 +213,7 @@ const App = function App() {
   if (currentPage === "viewDiary") {
     return (
       <ViewDiaryPage
-
+        setCurrentPage={setCurrentPage}
       />
     );
   }

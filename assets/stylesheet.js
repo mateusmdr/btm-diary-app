@@ -21,6 +21,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 100*vh + (Platform.OS === 'ios' ? 0 : StatusBar.currentHeight),
         position: 'relative',
+        paddingLeft: 9*vw,
+        paddingRight: 9*vw,
     },
     header: {
         width: 100*vw,
@@ -46,11 +48,24 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         fontFamily: 'OpenSans',
     },
-    searchBar: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 82*vw,
+    title: {
+        color: '#474D7B',
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 22,
+        alignSelf: 'flex-start',
+        paddingTop: 20,
+        paddingBottom: 10,
+    },
+    subtitle: {
+
+    },
+    label: {
+        color: '#C2CFD6',
+        alignSelf: 'flex-start',
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 15,
+        paddingBottom: 10,
+        paddingTop: 25,
     },
     textInput: {
         height: 7.8*vh,
@@ -58,7 +73,24 @@ const styles = StyleSheet.create({
         borderWidth: 1.6,
         borderStyle: 'solid',
         borderRadius: 4,
-        paddingLeft: 30+3*vh,
+        paddingLeft: 5*vw,
+        paddingRight: 20,
+        fontSize: normalize(20),
+        fontFamily: 'OpenSans',
+        flex: 1,
+    },
+    textInputView: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    searchBar: {
+        height: 7.8*vh,
+        borderColor: '#C2CFD6',
+        borderWidth: 1.6,
+        borderStyle: 'solid',
+        borderRadius: 4,
+        paddingLeft: 30+8*vw,
         paddingRight: 20,
         fontSize: normalize(20),
         fontFamily: 'OpenSans',
@@ -98,25 +130,24 @@ const styles = StyleSheet.create({
         backgroundColor: '#BCBCBC',
     },
     arrowButton: {
-        width: 30,
-        height: 30,
+        width: 35,
+        height: 35,
         alignSelf: 'flex-start',
-        paddingLeft: 30+3*vw,
+    },
+    floatButton: {
+        position: 'absolute',
+        right: -3.5*vh,
+        bottom: -3.5*vh,
     },
     buildingList: {
-        paddingLeft: 9*vw,
-        paddingRight: 9*vw,
         paddingTop: 4*vh,
-
+        width: 82*vw,
         paddingBottom: 50,
         height: 75*vh,
     },
     building: {
         paddingBottom: 3*vh,
-        width: 82*vw,
         alignItems: 'center',
-        
-
     },
     buildingH1: {
         fontFamily: 'OpenSans',
@@ -128,6 +159,8 @@ const styles = StyleSheet.create({
         paddingBottom: 2*vh,
         paddingLeft: 10*vw,
         paddingRight: 10*vw,
+        minWidth: 60*vw,
+        textAlign: 'center',
     }
 });
 

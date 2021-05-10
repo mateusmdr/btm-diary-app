@@ -1,16 +1,19 @@
 import React from 'react';
 import {View, Text, FlatList, TouchableWithoutFeedback, SafeAreaView} from 'react-native';
-import {AddButton, ArrowButton, RemoveButton} from './Buttons';
+import {AddButton, EditButton, ArrowButton, RemoveButton} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
 
 import styles from './assets/stylesheet';
+import { TextInput } from 'react-native-gesture-handler';
 
 const Page = (props) => {
-    <SafeAreaView style={styles.safeAreaView}>
-        <Header/>
-        {props.children}
-    </SafeAreaView>
+    return (
+        <SafeAreaView style={styles.safeAreaView}>
+            <Header/>
+            {props.children}
+        </SafeAreaView>
+    );
 }
 
 const Building = (props) => {
@@ -57,12 +60,18 @@ const HomePage = (props) => {
     );
 }
 
-const AddBuildingPage = () => {
+const AddBuildingPage = (props) => {
     return(
         <Page>
-            <Text>Cadastrar Obra</Text>
-            <View style={styles.buttonList}>
-                <AddButton onClick={() => props.setCurrentPage("addBuilding")}/>
+            <ArrowButton onClick={() => props.setCurrentPage("home")}/>
+            <Text style={styles.title}>Cadastrar Obra</Text>
+            <Text style={styles.label}>Nome da Obra</Text>
+            <View style={styles.textInputView}>
+                <TextInput
+                    style={styles.textInput}
+                    placeholder=""
+                    underlineColorAndroid="transparent"
+                />
             </View>
         </Page>
     );
@@ -72,10 +81,10 @@ const ViewBuildingPage = (props) => {
     return(
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("home")}/>
-            <Text>{props.currentBuilding.name}</Text>
+            <Text style={styles.title}>{props.currentBuilding.name}</Text>
             <SearchBar/>
             <View style={styles.buttonList}>
-                <EditButton onClick={props.setCurrentPage("editBuilding")}/>
+                <EditButton onClick={() => props.setCurrentPage("editBuilding")}/>
                 <AddButton onClick={() => props.setCurrentPage("addDiary")}/>
             </View>
         </Page>
@@ -86,8 +95,18 @@ const EditBuildingPage = (props) => {
     return (
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
-            <Text>Editar Obra</Text>
-            <RemoveButton/>
+            <Text style={styles.title}>Editar Obra</Text>
+            <Text style={styles.label}>Nome da Obra</Text>
+            <View style={styles.textInputView}>
+                <TextInput
+                    style={styles.textInput}
+                    placeholder={props.currentBuilding.name}
+                    underlineColorAndroid="transparent"
+                />
+                <View style={styles.floatButton}>
+                    <RemoveButton onClick={() => props.setCurrentPage("home")}/>
+                </View>
+            </View>
         </Page>
     );
 }
@@ -103,7 +122,7 @@ const ViewDiaryPage = (props) => {
 const AddDiaryPage = (props) => {
     return (
         <Page>
-            <ArrowButton onClick={() => props.setCurrentPage("addDiary")}/>
+            <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")}/>
         </Page>
     );
 }
