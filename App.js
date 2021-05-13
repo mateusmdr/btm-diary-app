@@ -67,6 +67,8 @@ const App = function App() {
       <AddDiaryPage
         setCurrentPage={setCurrentPage}
         currentBuilding={currentBuilding}
+        setCurrentBuilding={setCurrentBuilding}
+        currentDiary={currentDiary}
       />
     );
   }

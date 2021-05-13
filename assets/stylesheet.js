@@ -19,10 +19,14 @@ const styles = StyleSheet.create({
         paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
         display: 'flex',
         alignItems: 'center',
-        height: 100*vh + (Platform.OS === 'ios' ? 0 : StatusBar.currentHeight),
+        height: 100*vh,
         position: 'relative',
         paddingLeft: 9*vw,
         paddingRight: 9*vw,
+    },
+    bold: {
+        fontFamily: 'OpenSans-Bold',
+        fontWeight: 'bold',
     },
     header: {
         width: 100*vw,
@@ -57,7 +61,10 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     subtitle: {
-
+        color: '#C2CFD6',
+        fontSize: 16,
+        fontFamily: 'OpenSans',
+        alignSelf: 'flex-start',
     },
     label: {
         color: '#C2CFD6',
@@ -145,7 +152,6 @@ const styles = StyleSheet.create({
         width: 82*vw,
         alignItems: 'center',
         borderRadius: 5,
-        marginTop: 50,
     },
     submitButtonH1: {
         color: 'white',
@@ -191,11 +197,30 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     diaryH1: {
-
+        color: '#474D7B',
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 14,
+        alignSelf: 'flex-start',
     },
     diaryH2: {
-
+        color: '#C2CFD6',
+        fontFamily: 'OpenSans',
     },
+    popUp : {
+        width: 100*vw,
+        height: 100*vh,
+        marginTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
+        position: 'absolute',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    confirmationDialog: {
+        backgroundColor: 'white',
+        width: 82*vw,
+        height: 60*vh,
+    },
+    confirmationDialog
 });
 
 export default styles;

@@ -40,12 +40,36 @@ const ArrowButton = (props) => {
 
 const SubmitButton = (props) => {
     return (
-        <TouchableOpacity onPress={props.onClick}>
-            <View style={styles.submitButton}>
-                <Text style={styles.submitButtonH1}>{props.title}</Text>
-            </View>
-        </TouchableOpacity>
+        <View style={{paddingTop:50}}>
+            <TouchableOpacity onPress={props.onClick}>
+                <View style={styles.submitButton}>
+                    <Text style={styles.submitButtonH1}>{props.title}</Text>
+                </View>
+            </TouchableOpacity>
+        </View>
     );
 }
 
-export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton};
+const ConfirmationDialog = (props) => {
+    const [onClick1,onClick2] = props.actions;
+
+    return (
+        <View style={styles.popUp}>
+            <View style={styles.confirmationDialog}>
+                {props.message}
+                <TouchableOpacity onPress={onClick1}>
+                    <View style={styles.confirmationDialogView1}>
+                        <Text style={styles.confirmationDialogText1}>{props.titles[0]}</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onClick2}>
+                    <View styles={styles.confirmationDialogView2}>
+                        <Text style={styles.confirmationDialogText2}>{props.titles[1]}</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+}
+
+export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog};
