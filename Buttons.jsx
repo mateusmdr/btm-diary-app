@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet,View, TouchableHighlight,TouchableWithoutFeedback, Text,TouchableOpacity} from 'react-native';
 import styles from './assets/stylesheet.js';
 
-import {AddImg,EditImg,RemoveImg,ArrowImg} from './assets/SvgComponents.jsx';
+import {AddImg,EditImg,RemoveImg,ArrowImg,AlertImg} from './assets/SvgComponents.jsx';
 
 const AddButton = (props) => {
     return (
@@ -56,17 +56,20 @@ const ConfirmationDialog = (props) => {
     return (
         <View style={styles.popUp}>
             <View style={styles.confirmationDialog}>
+                <AlertImg/>
                 {props.message}
-                <TouchableOpacity onPress={onClick1}>
-                    <View style={styles.confirmationDialogView1}>
-                        <Text style={styles.confirmationDialogText1}>{props.titles[0]}</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={onClick2}>
-                    <View styles={styles.confirmationDialogView2}>
-                        <Text style={styles.confirmationDialogText2}>{props.titles[1]}</Text>
-                    </View>
-                </TouchableOpacity>
+                <View style={{flexDirection:'row', alignContent: 'space-between'}}>
+                    <TouchableOpacity onPress={onClick1}>
+                        <View style={styles.confirmationDialogView1}>
+                            <Text style={styles.confirmationDialogText1}>{props.titles[0]}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={onClick2}>
+                        <View style={styles.confirmationDialogView2}>
+                            <Text style={styles.confirmationDialogText2}>{props.titles[1]}</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );

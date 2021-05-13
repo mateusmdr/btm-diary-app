@@ -215,12 +215,55 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    alertImg: {
+        width: 60,
+        height: 60,
+    },
     confirmationDialog: {
         backgroundColor: 'white',
         width: 82*vw,
-        height: 60*vh,
+        alignItems: 'center',
+        paddingLeft: 30,
+        paddingRight: 30,
+        paddingTop: 50,
+        paddingBottom: 50,
+        justifyContent: 'center',
+        borderRadius: 5,
     },
-    confirmationDialog
+    confirmationDialogMessage: {
+        fontFamily: 'OpenSans',
+        fontSize: 15,
+        color: '#B3BFC6',
+        textAlign: 'center',
+        paddingTop: 20,
+        paddingBottom: 40,
+    },
+    confirmationDialogView1: {
+        width: 30*vw,
+        marginRight: 10,
+        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: '#303450',
+        color: '#303450',
+    },
+    confirmationDialogView2: {
+        width: 30*vw,
+
+        backgroundColor: '#303450',
+        marginLeft: 10,
+        borderRadius: 4,
+    },
+    confirmationDialogText1: {
+        textAlign: 'center',
+        padding: 10,
+        fontFamily: 'OpenSans-Bold',
+    },
+    confirmationDialogText2: {
+        textAlign: 'center',
+        padding: 10,
+        fontFamily: 'OpenSans-Bold',
+        color: 'white',
+    },
 });
 
 export default styles;

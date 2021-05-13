@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, TouchableWithoutFeedbackBase} from 'react-native';
+import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, Alert} from 'react-native';
 import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
@@ -33,7 +33,6 @@ const Building = (props) => {
 }
 
 const HomePage = (props) => {
-
     const renderBuilding = ({item}) => {
         return(
             <Building 
@@ -94,6 +93,11 @@ const EditBuildingPage = (props) => {
     const currentBuildingIndex = getBuildingIndexById(props.buildings, props.currentBuilding.key);
     
     function removeBuilding(){
+        let updatedBuildings = 
+        (props.buildings.slice(0,currentBuildingIndex))
+            .concat(props.buildings.slice(currentBuildingIndex + 1));
+        
+        props.setBuildings(updatedBuildings);
         props.setCurrentPage("home");
     }
     return (
@@ -126,7 +130,7 @@ const EditBuildingPage = (props) => {
                 }}
             />
             {popUp ? (<ConfirmationDialog
-                actions = {[() => removeBuilding,() => setPopUp(false)]}
+                actions = {[() => removeBuilding(),() => setPopUp(false)]}
                 titles = {["Deletar", "Cancelar"]}
                 message = {(
                     <Text style={styles.confirmationDialogMessage}>

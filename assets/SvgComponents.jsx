@@ -1,5 +1,6 @@
 import React from "react";
-import Svg, { Path } from "react-native-svg"
+import Svg, { Path ,Defs,Stop,LinearGradient} from "react-native-svg"
+import styles from "./stylesheet";
 
 const AddImg = (props) => {
   return (
@@ -98,4 +99,35 @@ const ArrowImg = (props) => {
   )
 }
 
-export {AddImg,EditImg,RemoveImg,SearchImg,ArrowImg};
+const AlertImg = (props) => {
+  return (
+    <Svg
+      width={styles.alertImg.width}
+      height={styles.alertImg.height}
+      viewBox="0 0 60 60"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={styles.alertImg}
+    >
+      <Path
+        d="M60 30C60 46.5722 46.5674 60 30 60C13.4326 60 0 46.5722 0 30C0 13.4375 13.4326 0 30 0C46.5674 0 60 13.4375 60 30ZM30 36.0484C26.9268 36.0484 24.4355 38.5397 24.4355 41.6129C24.4355 44.6861 26.9268 47.1774 30 47.1774C33.0732 47.1774 35.5645 44.6861 35.5645 41.6129C35.5645 38.5397 33.0732 36.0484 30 36.0484ZM24.717 16.0469L25.6143 32.4985C25.6563 33.2683 26.2928 33.871 27.0637 33.871H32.9362C33.7072 33.871 34.3437 33.2683 34.3857 32.4985L35.283 16.0469C35.3284 15.2153 34.6663 14.5161 33.8336 14.5161H26.1663C25.3335 14.5161 24.6716 15.2153 24.717 16.0469Z"
+        fill="url(#prefix__a)"
+      />
+      <Defs>
+        <LinearGradient
+          id="prefix__a"
+          x1={33.664}
+          y1={0}
+          x2={33.664}
+          y2={60}
+          gradientUnits="userSpaceOnUse"
+        >
+          <Stop stopColor="#BF9135" />
+          <Stop offset={1} stopColor="#EBC780" />
+        </LinearGradient>
+      </Defs>
+    </Svg>
+  );
+}
+
+export {AddImg,EditImg,RemoveImg,SearchImg,ArrowImg, AlertImg};
