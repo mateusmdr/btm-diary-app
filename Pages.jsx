@@ -52,7 +52,7 @@ const HomePage = (props) => {
             <SearchBar onChangeText={setTextInput}/>
             <View style={styles.buildingList}>
                 <FlatList 
-                    data={props.data} 
+                    data={props.buildings} 
                     renderItem={renderBuilding}
                     keyExtractor={(item) => item.name}
                 />
@@ -65,7 +65,11 @@ const HomePage = (props) => {
 }
 
 const AddBuildingPage = (props) => {
-    const [buildingName, updatebuildingName] = useState(null);
+    const [textInput, setTextInput] = useState("");
+
+    const [existsPopUp, setExistsPopUp] = useState(false);
+    const [emptyPopUp, setEmptyPopUp] = useState(false);
+
     return(
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("home")}/>
@@ -76,18 +80,42 @@ const AddBuildingPage = (props) => {
                     style={styles.textInput}
                     placeholder=""
                     underlineColorAndroid="transparent"
-                    onChangeText={updatebuildingName}
+                    onChangeText={setTextInput}
                 />
             </View>
             <SubmitButton 
                 title="Cadastrar" 
                 onClick={() => {
-                    if(buildingName){
-                        let time = new Date().getTime();
-                        props.setBuildings(props.data.concat({name: buildingName, key: time.toString()}));
-                        props.setCurrentPage("home");
+                    //Text input is empty
+                    if(!textInput){
+                        setEmptyPopUp(true);
+                        return null;
+                    } 
+                    
+                    //Building name already exists
+                    if(props.buildings.find(element => element.name === textInput)){ 
+                        setExistsPopUp(true);
+                        return null;
                     }
+
+                    //Everything is fine
+                    props.setBuildings(props.buildings.concat({name: textInput}));
+                    props.setCurrentPage("home");
                 }}
+            />
+            <ErrorDialog
+                onClick={()=> setEmptyPopUp(false)}
+                message= {(
+                    <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Nenhum nome foi fornecido</Text>
+                )}
+                condition={emptyPopUp}
+            />
+            <ErrorDialog
+                onClick={() => setExistsPopUp(false)}
+                message= {(
+                    <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Já existe uma obra com este nome</Text>
+                )}
+                condition={existsPopUp}
             />
         </Page>
     );
@@ -149,35 +177,31 @@ const EditBuildingPage = (props) => {
                     props.setCurrentPage("home");
                 }}
             />
-            {removePopUp ? (
-                <ConfirmationDialog
-                    actions = {[() => removeBuilding(),() => setRemovePopUp(false)]}
-                    titles = {["Deletar", "Cancelar"]}
-                    message = {(
-                        <Text style={styles.confirmationDialogMessage}>
-                            Você tem certeza que deseja <Text style={styles.bold}>deletar</Text> a obra <Text style={styles.bold}>“{props.currentBuilding.name}”</Text> e todas as anotações sobre ela?
-                        </Text>
-                    )}
-                />
-            ) : null}
+            <ConfirmationDialog
+                actions = {[() => removeBuilding(),() => setRemovePopUp(false)]}
+                titles = {["Deletar", "Cancelar"]}
+                message = {(
+                    <Text style={styles.confirmationDialogMessage}>
+                        Você tem certeza que deseja <Text style={styles.bold}>deletar</Text> a obra <Text style={styles.bold}>“{props.currentBuilding.name}”</Text> e todas as anotações sobre ela?
+                    </Text>
+                )}
+                condition={removePopUp}
+            />
 
-            {emptyPopUp ? (
-                <ErrorDialog
-                    onClick={()=> setEmptyPopUp(false)}
-                    message= {(
-                        <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Nenhum nome foi fornecido</Text>
-                    )}
-                />
-            ): null}
-
-            {existsPopUp ? (
-                <ErrorDialog
-                    onClick={() => setExistsPopUp(false)}
-                    message= {(
-                        <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Já existe uma obra com este nome</Text>
-                    )}
-                />
-            ): null}
+            <ErrorDialog
+                onClick={()=> setEmptyPopUp(false)}
+                message= {(
+                    <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Nenhum nome foi fornecido</Text>
+                )}
+                condition={emptyPopUp}
+            />
+            <ErrorDialog
+                onClick={() => setExistsPopUp(false)}
+                message= {(
+                    <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Já existe uma obra com este nome</Text>
+                )}
+                condition={existsPopUp}
+            />
         </Page>
     );
 }
@@ -264,7 +288,7 @@ const AddDiaryPage = (props) => {
                 title="Salvar" 
                 onClick={() => {
                     props.setCurrentPage("viewBuilding");
-                    props.setCurrentBuilding(props.currentBuilding.concat())
+                    //props.setCurrentBuilding(props.currentBuilding.concat())
                 }}
             />
         </Page>

@@ -24,7 +24,7 @@ const App = function App() {
   if (currentPage === "home" ){
     return (
       <HomePage 
-        data={buildings} 
+        buildings={buildings} 
         setCurrentPage={setCurrentPage}
         setCurrentBuilding={setCurrentBuilding}
       />
@@ -34,7 +34,7 @@ const App = function App() {
   if (currentPage === "addBuilding"){
     return(
       <AddBuildingPage 
-        data={buildings} 
+        buildings={buildings} 
         setCurrentPage={setCurrentPage}
         setBuildings={setBuildings}
       />

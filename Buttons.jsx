@@ -51,45 +51,52 @@ const SubmitButton = (props) => {
 }
 
 const ConfirmationDialog = (props) => {
-    const [onClick1,onClick2] = props.actions;
+    if (props.condition){
+        const [onClick1,onClick2] = props.actions;
 
-    return (
-        <View style={styles.popUp}>
-            <View style={styles.errorDialog}>
-                <AlertImg/>
-                {props.message}
-                <View style={{flexDirection:'row', alignContent: 'space-between'}}>
-                    <TouchableOpacity onPress={onClick1}>
-                        <View style={styles.confirmationDialogView1}>
-                            <Text style={styles.confirmationDialogButton1}>{props.titles[0]}</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={onClick2}>
-                        <View style={styles.confirmationDialogView2}>
-                            <Text style={styles.confirmationDialogButton2}>{props.titles[1]}</Text>
-                        </View>
-                    </TouchableOpacity>
+        return (
+            <View style={styles.popUp}>
+                <View style={styles.errorDialog}>
+                    <AlertImg/>
+                    {props.message}
+                    <View style={{flexDirection:'row', alignContent: 'space-between'}}>
+                        <TouchableOpacity onPress={onClick1}>
+                            <View style={styles.confirmationDialogView1}>
+                                <Text style={styles.confirmationDialogButton1}>{props.titles[0]}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onClick2}>
+                            <View style={styles.confirmationDialogView2}>
+                                <Text style={styles.confirmationDialogButton2}>{props.titles[1]}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-        </View>
-    );
+        );
+    }
+
+    return null;
 }
 
 const ErrorDialog = (props) => {
 
-    return (
-        <View style={styles.popUp}>
-            <View style={styles.errorDialog}>
-                <AlertImg/>
-                {props.message}
-                <TouchableOpacity onPress={props.onClick}>
-                    <View style={styles.errorDialogView}>
-                        <Text style={styles.errorDialogButton}>OK</Text>
-                    </View>
-                </TouchableOpacity>
+    if(props.condition){
+        return (
+            <View style={styles.popUp}>
+                <View style={styles.errorDialog}>
+                    <AlertImg/>
+                    {props.message}
+                    <TouchableOpacity onPress={props.onClick}>
+                        <View style={styles.errorDialogView}>
+                            <Text style={styles.errorDialogButton}>OK</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
-    );
+        );
+    }
+    return null;
 }
 
 export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog};
