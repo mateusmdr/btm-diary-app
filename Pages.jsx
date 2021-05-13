@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, FlatList, TouchableWithoutFeedback, SafeAreaView} from 'react-native';
-import {AddButton, EditButton, ArrowButton, RemoveButton} from './Buttons';
+import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
 
@@ -29,6 +29,13 @@ const Building = (props) => {
             </View>
         </TouchableWithoutFeedback>
     );
+}
+
+function getBuildingIndexById(buildings,key) {
+
+    const index = buildings.findIndex(element => element.key === key);
+
+    return index;
 }
 
 const Diary = (props) => {
@@ -61,6 +68,7 @@ const HomePage = (props) => {
 }
 
 const AddBuildingPage = (props) => {
+    const [buildingName, updatebuildingName] = useState(null);
     return(
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("home")}/>
@@ -71,8 +79,19 @@ const AddBuildingPage = (props) => {
                     style={styles.textInput}
                     placeholder=""
                     underlineColorAndroid="transparent"
+                    onChangeText={updatebuildingName}
                 />
             </View>
+            <SubmitButton 
+                title="Cadastrar" 
+                onClick={() => {
+                    if(buildingName){
+                        let time = new Date().getTime();
+                        props.setBuildings(props.data.concat({name: buildingName, key: time.toString()}));
+                        props.setCurrentPage("home");
+                    }
+                }}
+            />
         </Page>
     );
 }
@@ -92,6 +111,9 @@ const ViewBuildingPage = (props) => {
 }
 
 const EditBuildingPage = (props) => {
+    const [buildingName, updatebuildingName] = useState(null);
+
+    const currentBuildingIndex = getBuildingIndexById(props.buildings, props.currentBuilding.key);
     return (
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
@@ -102,11 +124,25 @@ const EditBuildingPage = (props) => {
                     style={styles.textInput}
                     placeholder={props.currentBuilding.name}
                     underlineColorAndroid="transparent"
+                    onChangeText={updatebuildingName}
                 />
                 <View style={styles.floatButton}>
                     <RemoveButton onClick={() => props.setCurrentPage("home")}/>
                 </View>
             </View>
+            <SubmitButton
+                title="Editar" 
+                onClick={() => {
+                    if(buildingName){
+
+                        let updatedBuildings = props.buildings;
+                        updatedBuildings[currentBuildingIndex].name = buildingName;
+
+                        props.setBuildings(updatedBuildings);
+                        props.setCurrentPage("home");
+                    }
+                }}
+            />
         </Page>
     );
 }

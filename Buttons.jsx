@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet,View, TouchableHighlight,TouchableWithoutFeedback} from 'react-native';
+import {StyleSheet,View, TouchableHighlight,TouchableWithoutFeedback, Text,TouchableOpacity} from 'react-native';
 import styles from './assets/stylesheet.js';
 
 import {AddImg,EditImg,RemoveImg,ArrowImg} from './assets/SvgComponents.jsx';
@@ -38,4 +38,14 @@ const ArrowButton = (props) => {
     );
 }
 
-export {AddButton,EditButton,RemoveButton,ArrowButton};
+const SubmitButton = (props) => {
+    return (
+        <TouchableOpacity onPress={props.onClick}>
+            <View style={styles.submitButton}>
+                <Text style={styles.submitButtonH1}>{props.title}</Text>
+            </View>
+        </TouchableOpacity>
+    );
+}
+
+export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton};

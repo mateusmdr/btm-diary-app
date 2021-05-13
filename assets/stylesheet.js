@@ -139,6 +139,19 @@ const styles = StyleSheet.create({
         right: -3.5*vh,
         bottom: -3.5*vh,
     },
+    submitButton: {
+        backgroundColor: '#474D7B',
+        padding: 15,
+        width: 82*vw,
+        alignItems: 'center',
+        borderRadius: 5,
+        marginTop: 50,
+    },
+    submitButtonH1: {
+        color: 'white',
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 18,
+    },
     buildingList: {
         paddingTop: 4*vh,
         width: 82*vw,
