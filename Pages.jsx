@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, Alert} from 'react-native';
-import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog} from './Buttons';
+import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView} from 'react-native';
+import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
 
 import styles from './assets/stylesheet';
 
-import {getWeekDay, getBuildingIndexById} from './lib/utilities.js';
+import {getFullDate, getBuildingIndexById} from './lib/utilities.js';
 
 const Page = (props) => {
     return (
@@ -33,21 +33,29 @@ const Building = (props) => {
 }
 
 const HomePage = (props) => {
+    const [textInput, setTextInput] = useState("");
+
     const renderBuilding = ({item}) => {
         return(
-            <Building 
-                item={item} 
-                setCurrentPage={props.setCurrentPage}
-                setCurrentBuilding={props.setCurrentBuilding}
-            />
+            (item.name.toLowerCase().includes(textInput.toLowerCase()) || !textInput) ?
+                (<Building 
+                    item={item} 
+                    setCurrentPage={props.setCurrentPage}
+                    setCurrentBuilding={props.setCurrentBuilding}
+                />)
+            : null
         );
     };
 
     return(
         <Page>
-            <SearchBar/>
+            <SearchBar onChangeText={setTextInput}/>
             <View style={styles.buildingList}>
-                <FlatList data={props.data} renderItem={renderBuilding}/>
+                <FlatList 
+                    data={props.data} 
+                    renderItem={renderBuilding}
+                    keyExtractor={(item) => item.name}
+                />
             </View>
             <View style={styles.buttonList}>
                 <AddButton onClick={() => props.setCurrentPage("addBuilding")}/>
@@ -86,9 +94,11 @@ const AddBuildingPage = (props) => {
 }
 
 const EditBuildingPage = (props) => {
-    const [buildingName, setBuildingName] = useState(null);
+    const [textInput, setTextInput] = useState("");
 
-    const [popUp, setPopUp] = useState(false);
+    const [existsPopUp, setExistsPopUp] = useState(false);
+    const [emptyPopUp, setEmptyPopUp] = useState(false);
+    const [removePopUp, setRemovePopUp] = useState(false);
 
     const currentBuildingIndex = getBuildingIndexById(props.buildings, props.currentBuilding.key);
     
@@ -110,39 +120,71 @@ const EditBuildingPage = (props) => {
                     style={styles.textInput}
                     placeholder={props.currentBuilding.name}
                     underlineColorAndroid="transparent"
-                    onChangeText={setBuildingName}
+                    onChangeText={setTextInput}
                 />
                 <View style={styles.floatButton}>
-                    <RemoveButton onClick={() => setPopUp(true)}/>
+                    <RemoveButton onClick={() => setRemovePopUp(true)}/>
                 </View>
             </View>
             <SubmitButton
                 title="Editar" 
                 onClick={() => {
-                    if(buildingName){
-
-                        let updatedBuildings = props.buildings;
-                        updatedBuildings[currentBuildingIndex].name = buildingName;
-
-                        props.setBuildings(updatedBuildings);
-                        props.setCurrentPage("home");
+                    //Text input is empty
+                    if(!textInput){
+                        setEmptyPopUp(true);
+                        return null;
+                    } 
+                    
+                    //Building name already exists
+                    if((props.buildings.find(element => element.name === textInput))&& textInput != props.currentBuilding.name){ 
+                        setExistsPopUp(true);
+                        return null;
                     }
+
+                    //Everything is fine
+                    let updatedBuildings = props.buildings;
+                    updatedBuildings[currentBuildingIndex].name = textInput;
+
+                    props.setBuildings(updatedBuildings);
+                    props.setCurrentPage("home");
                 }}
             />
-            {popUp ? (<ConfirmationDialog
-                actions = {[() => removeBuilding(),() => setPopUp(false)]}
-                titles = {["Deletar", "Cancelar"]}
-                message = {(
-                    <Text style={styles.confirmationDialogMessage}>
-                        Você tem certeza que deseja <Text style={styles.bold}>deletar</Text> a obra <Text style={styles.bold}>“Nome da Obra”</Text> e todas as anotações sobre ela?
-                    </Text>
-                )}
-            />) : null}
+            {removePopUp ? (
+                <ConfirmationDialog
+                    actions = {[() => removeBuilding(),() => setRemovePopUp(false)]}
+                    titles = {["Deletar", "Cancelar"]}
+                    message = {(
+                        <Text style={styles.confirmationDialogMessage}>
+                            Você tem certeza que deseja <Text style={styles.bold}>deletar</Text> a obra <Text style={styles.bold}>“{props.currentBuilding.name}”</Text> e todas as anotações sobre ela?
+                        </Text>
+                    )}
+                />
+            ) : null}
+
+            {emptyPopUp ? (
+                <ErrorDialog
+                    onClick={()=> setEmptyPopUp(false)}
+                    message= {(
+                        <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Nenhum nome foi fornecido</Text>
+                    )}
+                />
+            ): null}
+
+            {existsPopUp ? (
+                <ErrorDialog
+                    onClick={() => setExistsPopUp(false)}
+                    message= {(
+                        <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Já existe uma obra com este nome</Text>
+                    )}
+                />
+            ): null}
         </Page>
     );
 }
 
 const Diary = (props) => {
+    const date = new Date(props.item.date);
+    const currentDate = getFullDate(date);
     return (
         <TouchableWithoutFeedback
             onPress={() => {
@@ -152,7 +194,7 @@ const Diary = (props) => {
         >
             <View style={styles.diary}>
                 <Text style={styles.diaryH2}>{props.item.description}</Text>
-                <Text style={styles.diaryH1}>{props.item.date}</Text>
+                <Text style={styles.diaryH1}>{currentDate}</Text>
             </View>
         </TouchableWithoutFeedback>
     );
@@ -174,7 +216,15 @@ const ViewBuildingPage = (props) => {
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
             <SearchBar/>
             <View style={styles.diaryList}>
-                <FlatList data={props.currentBuilding.diaries} renderItem={renderDiary}/>
+                <FlatList 
+                    data={props.currentBuilding.diaries} 
+                    renderItem={renderDiary}
+                    keyExtractor={(item) => {
+                        const date = new Date(item.date);
+
+                        return date.toLocaleDateString();
+                    }}
+                />
             </View>
             <View style={styles.buttonList}>
                 <EditButton onClick={() => props.setCurrentPage("editBuilding")}/>
@@ -193,9 +243,10 @@ const ViewDiaryPage = (props) => {
 }
 
 const AddDiaryPage = (props) => {
-    const date = new Date();
-    const weekDay = getWeekDay(date);
-    const currentDate = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + " (" + weekDay + ")";
+    const date = new Date();    
+    const currentDate = getFullDate(date);
+    
+    const [description, setDescription] = useState("");
     return (
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")}/>
@@ -203,8 +254,19 @@ const AddDiaryPage = (props) => {
             <Text style={styles.diaryH1}>{currentDate}</Text>
             <Text style={styles.subtitle}>Galeria</Text>
             <View style={styles.textInputView}>
-                <TextInput style={styles.textInput} placeholder="Descrição"/>
+                <TextInput 
+                    style={styles.textInput} 
+                    placeholder="Descrição"
+                    onChangeText={setDescription}
+                />
             </View>
+            <SubmitButton 
+                title="Salvar" 
+                onClick={() => {
+                    props.setCurrentPage("viewBuilding");
+                    props.setCurrentBuilding(props.currentBuilding.concat())
+                }}
+            />
         </Page>
     );
 }

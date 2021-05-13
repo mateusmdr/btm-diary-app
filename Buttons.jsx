@@ -55,18 +55,18 @@ const ConfirmationDialog = (props) => {
 
     return (
         <View style={styles.popUp}>
-            <View style={styles.confirmationDialog}>
+            <View style={styles.errorDialog}>
                 <AlertImg/>
                 {props.message}
                 <View style={{flexDirection:'row', alignContent: 'space-between'}}>
                     <TouchableOpacity onPress={onClick1}>
                         <View style={styles.confirmationDialogView1}>
-                            <Text style={styles.confirmationDialogText1}>{props.titles[0]}</Text>
+                            <Text style={styles.confirmationDialogButton1}>{props.titles[0]}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={onClick2}>
                         <View style={styles.confirmationDialogView2}>
-                            <Text style={styles.confirmationDialogText2}>{props.titles[1]}</Text>
+                            <Text style={styles.confirmationDialogButton2}>{props.titles[1]}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -75,4 +75,21 @@ const ConfirmationDialog = (props) => {
     );
 }
 
-export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog};
+const ErrorDialog = (props) => {
+
+    return (
+        <View style={styles.popUp}>
+            <View style={styles.errorDialog}>
+                <AlertImg/>
+                {props.message}
+                <TouchableOpacity onPress={props.onClick}>
+                    <View style={styles.errorDialogView}>
+                        <Text style={styles.errorDialogButton}>OK</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+}
+
+export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog};

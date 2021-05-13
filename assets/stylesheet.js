@@ -253,12 +253,42 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         borderRadius: 4,
     },
-    confirmationDialogText1: {
+    confirmationDialogButton1: {
         textAlign: 'center',
         padding: 10,
         fontFamily: 'OpenSans-Bold',
     },
-    confirmationDialogText2: {
+    confirmationDialogButton2: {
+        textAlign: 'center',
+        padding: 10,
+        fontFamily: 'OpenSans-Bold',
+        color: 'white',
+    },
+    errorDialog: {
+        backgroundColor: 'white',
+        width: 82*vw,
+        alignItems: 'center',
+        paddingLeft: 30,
+        paddingRight: 30,
+        paddingTop: 50,
+        paddingBottom: 50,
+        justifyContent: 'center',
+        borderRadius: 5,
+    },
+    errorDialogMessage: {
+        fontFamily: 'OpenSans',
+        fontSize: 15,
+        color: '#B3BFC6',
+        textAlign: 'center',
+        paddingTop: 20,
+        paddingBottom: 40,
+    },
+    errorDialogView: {
+        width: 30*vw,
+        backgroundColor: '#303450',
+        borderRadius: 4,
+    },
+    errorDialogButton: {
         textAlign: 'center',
         padding: 10,
         fontFamily: 'OpenSans-Bold',
