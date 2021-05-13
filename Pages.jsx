@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, FlatList, TouchableWithoutFeedback, SafeAreaView} from 'react-native';
+import {View, Text, FlatList, TouchableWithoutFeedback, SafeAreaView, TouchableWithoutFeedbackBase} from 'react-native';
 import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
@@ -39,7 +39,16 @@ function getBuildingIndexById(buildings,key) {
 }
 
 const Diary = (props) => {
-
+    return (
+        <TouchableWithoutFeedback
+            onPress={() => props.setCurrentPage("home")}
+        >
+            <View style={styles.diary}>
+                <Text style={styles.diaryH2}>{props.item.date}</Text>
+                <Text style={styles.diaryH1}>{props.item.description}</Text>
+            </View>
+        </TouchableWithoutFeedback>
+    );
 }
 
 const HomePage = (props) => {
@@ -97,11 +106,23 @@ const AddBuildingPage = (props) => {
 }
 
 const ViewBuildingPage = (props) => {
+    const renderDiary = ({item}) => {
+        return(
+            <Diary 
+                item={item} 
+                setCurrentPage={props.setCurrentPage}
+                setCurrentDiary={props.setCurrentDiary}
+            />
+        );
+    };
     return(
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("home")}/>
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
             <SearchBar/>
+            <View style={styles.diaryList}>
+                <FlatList data={props.currentBuilding.diaries} renderItem={renderDiary}/>
+            </View>
             <View style={styles.buttonList}>
                 <EditButton onClick={() => props.setCurrentPage("editBuilding")}/>
                 <AddButton onClick={() => props.setCurrentPage("addDiary")}/>

@@ -174,7 +174,28 @@ const styles = StyleSheet.create({
         paddingRight: 10*vw,
         minWidth: 60*vw,
         textAlign: 'center',
-    }
+    },
+    diaryList: {
+        paddingBottom: 5*vh,
+        paddingTop: 30,
+    },
+    diary: {
+        borderWidth: 2,
+        borderRadius: 4,
+        borderColor: 'rgba(159, 159, 159, 0.25)',
+        width: 82*vw,
+        paddingLeft: 25,
+        paddingRight: 25,
+        paddingTop: 15,
+        paddingBottom: 15,
+        marginBottom: 20,
+    },
+    diaryH1: {
+
+    },
+    diaryH2: {
+
+    },
 });
 
 export default styles;

@@ -45,7 +45,8 @@ const App = function App() {
     return(
       <ViewBuildingPage 
         setCurrentPage={setCurrentPage} 
-        currentBuilding={currentBuilding}        
+        currentBuilding={currentBuilding}
+        setCurrentDiary={setCurrentDiary} 
       />
     )
   }
