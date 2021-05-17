@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView} from 'react-native';
-import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog} from './Buttons';
+import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, ScrollView} from 'react-native';
+import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, AddGalery} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
 
@@ -262,6 +262,7 @@ const ViewDiaryPage = (props) => {
     return (
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
+            <AddGalery/>
         </Page>
     );
 }
@@ -277,6 +278,15 @@ const AddDiaryPage = (props) => {
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
             <Text style={styles.diaryH1}>{currentDate}</Text>
             <Text style={styles.subtitle}>Galeria</Text>
+            <View style={styles.addGaleryScrollView}>
+                <ScrollView horizontal={true}>
+                    <AddGalery/>
+                    <AddGalery/>
+                    <AddGalery/>
+                    <AddGalery/>
+                    <AddGalery/>
+                </ScrollView>
+            </View>
             <View style={styles.textInputView}>
                 <TextInput 
                     style={styles.textInput} 

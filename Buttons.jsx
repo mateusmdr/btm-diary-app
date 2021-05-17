@@ -7,7 +7,11 @@ import {AddImg,EditImg,RemoveImg,ArrowImg,AlertImg} from './assets/SvgComponents
 const AddButton = (props) => {
     return (
         <TouchableHighlight style={StyleSheet.compose(styles.button,styles.addButton)} onPress={props.onClick}>
-            <AddImg width={styles.buttonImg.width} height={styles.buttonImg.height}/>
+            <AddImg 
+                width={styles.buttonImg.width} 
+                height={styles.buttonImg.height}
+                backgroundColor="#fff"    
+            />
         </TouchableHighlight>
     );
 };
@@ -99,4 +103,18 @@ const ErrorDialog = (props) => {
     return null;
 }
 
-export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog};
+const AddGalery = (props) => {
+    return(
+        <TouchableWithoutFeedback>
+            <View style={styles.addGaleryButton}>
+                <AddImg 
+                    width={styles.addGaleryImg.width} 
+                    height={styles.addGaleryImg.height}
+                    backgroundColor="#C2CFD6"
+                />
+            </View>
+        </TouchableWithoutFeedback>
+    );
+}
+
+export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog, AddGalery};

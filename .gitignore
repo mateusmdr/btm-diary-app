@@ -17,6 +17,7 @@ ios/
 .gitattributes
 metro.config.js
 yarn.lock
+yarn-error.log
 
 # macOS
 .DS_Store

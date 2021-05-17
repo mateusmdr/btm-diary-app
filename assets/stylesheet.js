@@ -62,9 +62,10 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         color: '#C2CFD6',
-        fontSize: 16,
+        fontSize: 18,
         fontFamily: 'OpenSans',
         alignSelf: 'flex-start',
+        paddingTop: 30,
     },
     label: {
         color: '#C2CFD6',
@@ -294,6 +295,27 @@ const styles = StyleSheet.create({
         fontFamily: 'OpenSans-Bold',
         color: 'white',
     },
+    addGaleryButton: {
+        width: 25*vw,
+        height: 25*vw,
+        borderWidth: 2,
+        borderColor: '#C2CFD6',
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        marginRight: 15
+    },
+    addGaleryImg: {
+        width: 7*vw,
+        height: 7*vw,
+    },
+    addGaleryScrollView: {
+        minWidth: 82*vw,
+        height: 28*vw,
+        marginTop: 10,
+        marginBottom: 20,
+    }
 });
 
 export default styles;
