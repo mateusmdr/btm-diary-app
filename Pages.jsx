@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, ScrollView} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, Image} from 'react-native';
 import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, AddGalery} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
 
 import styles from './assets/stylesheet';
 
-import {getFullDate, getBuildingIndexById} from './lib/utilities.js';
+import {getFullDate,getWeekDay} from './lib/utilities.js';
+
+import * as ImagePicker from 'expo-image-picker';
 
 const Page = (props) => {
     return (
@@ -86,21 +88,22 @@ const AddBuildingPage = (props) => {
             <SubmitButton 
                 title="Cadastrar" 
                 onClick={() => {
-                    //Text input is empty
-                    if(!textInput){
-                        setEmptyPopUp(true);
-                        return null;
-                    } 
-                    
-                    //Building name already exists
-                    if(props.buildings.find(element => element.name === textInput)){ 
-                        setExistsPopUp(true);
-                        return null;
-                    }
+                    try{
+                        props.addBuilding({name: textInput});
+                        props.setCurrentPage("home");
+                    }catch (err){
+                        //Input is empty
+                        if(err === "empty"){
+                            setEmptyPopUp(true);
+                            return;
+                        }
 
-                    //Everything is fine
-                    props.setBuildings(props.buildings.concat({name: textInput}));
-                    props.setCurrentPage("home");
+                        //Building name already exists
+                        if(err === "exists"){
+                            setExistsPopUp(true);
+                            return;
+                        }
+                    }
                 }}
             />
             <ErrorDialog
@@ -127,17 +130,8 @@ const EditBuildingPage = (props) => {
     const [existsPopUp, setExistsPopUp] = useState(false);
     const [emptyPopUp, setEmptyPopUp] = useState(false);
     const [removePopUp, setRemovePopUp] = useState(false);
-
-    const currentBuildingIndex = getBuildingIndexById(props.buildings, props.currentBuilding.key);
     
-    function removeBuilding(){
-        let updatedBuildings = 
-        (props.buildings.slice(0,currentBuildingIndex))
-            .concat(props.buildings.slice(currentBuildingIndex + 1));
-        
-        props.setBuildings(updatedBuildings);
-        props.setCurrentPage("home");
-    }
+
     return (
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
@@ -157,28 +151,30 @@ const EditBuildingPage = (props) => {
             <SubmitButton
                 title="Editar" 
                 onClick={() => {
-                    //Text input is empty
-                    if(!textInput){
-                        setEmptyPopUp(true);
-                        return null;
-                    } 
-                    
-                    //Building name already exists
-                    if((props.buildings.find(element => element.name === textInput))&& textInput != props.currentBuilding.name){ 
-                        setExistsPopUp(true);
-                        return null;
+                    try{
+                        props.editBuilding({name: textInput});
+                        props.setCurrentPage("home");
+                    }catch (err){
+                        //Input is empty
+                        if(err === "empty"){
+                            setEmptyPopUp(true);
+                        }
+
+                        //Building name already exists
+                        if(err === "exists"){
+                            setExistsPopUp(true);
+                        }
                     }
-
-                    //Everything is fine
-                    let updatedBuildings = props.buildings;
-                    updatedBuildings[currentBuildingIndex].name = textInput;
-
-                    props.setBuildings(updatedBuildings);
-                    props.setCurrentPage("home");
                 }}
             />
             <ConfirmationDialog
-                actions = {[() => removeBuilding(),() => setRemovePopUp(false)]}
+                actions = {[
+                    () => {
+                        props.removeBuilding(); 
+                        props.setCurrentPage("home");
+                    },
+                    () => setRemovePopUp(false)
+                ]}
                 titles = {["Deletar", "Cancelar"]}
                 message = {(
                     <Text style={styles.confirmationDialogMessage}>
@@ -208,7 +204,8 @@ const EditBuildingPage = (props) => {
 
 const Diary = (props) => {
     const date = new Date(props.item.date);
-    const currentDate = getFullDate(date);
+    const fullDate = getFullDate(date);
+    const weekDay = getWeekDay(date);
     return (
         <TouchableWithoutFeedback
             onPress={() => {
@@ -218,7 +215,7 @@ const Diary = (props) => {
         >
             <View style={styles.diary}>
                 <Text style={styles.diaryH2}>{props.item.description}</Text>
-                <Text style={styles.diaryH1}>{currentDate}</Text>
+                <Text style={styles.diaryH1}>{fullDate + " ("+ weekDay + ")"}</Text>
             </View>
         </TouchableWithoutFeedback>
     );
@@ -243,11 +240,7 @@ const ViewBuildingPage = (props) => {
                 <FlatList 
                     data={props.currentBuilding.diaries} 
                     renderItem={renderDiary}
-                    keyExtractor={(item) => {
-                        const date = new Date(item.date);
-
-                        return date.toLocaleDateString();
-                    }}
+                    keyExtractor={(item) => getFullDate(new Date(item.date))}
                 />
             </View>
             <View style={styles.buttonList}>
@@ -272,6 +265,49 @@ const AddDiaryPage = (props) => {
     const currentDate = getFullDate(date);
     
     const [description, setDescription] = useState("");
+
+    const [images, setImages] = useState([]);
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+                alert('Erro: É necessário fornecer permissões de acesso à galeria do dispositivo');
+            }
+        })();
+    }, []);
+
+    const pickImage = async() => {
+        let result = await ImagePicker.launchImageLibraryAsync({ 
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1,1],
+            quality: 1,
+        });
+
+        if (!result.cancelled) {
+            setImages(images.concat({uri: result.uri}));
+        }
+    }
+
+    const addButton = [{uri: "addButton"}];
+
+    const renderImage = ({item}) => {
+            if(item.uri === "addButton"){
+                return (
+                    <AddGalery 
+                        onClick={() => {
+                            pickImage();
+                        }}
+                    />
+                );
+            }
+
+            return (
+                <Image source={{uri: item.uri}} style={styles.galeryImg}/>
+            );
+    }
+
     return (
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")}/>
@@ -279,14 +315,14 @@ const AddDiaryPage = (props) => {
             <Text style={styles.diaryH1}>{currentDate}</Text>
             <Text style={styles.subtitle}>Galeria</Text>
             <View style={styles.addGaleryScrollView}>
-                <ScrollView horizontal={true}>
-                    <AddGalery/>
-                    <AddGalery/>
-                    <AddGalery/>
-                    <AddGalery/>
-                    <AddGalery/>
-                </ScrollView>
+                <FlatList 
+                    data={addButton.concat(images)}
+                    renderItem={renderImage}
+                    keyExtractor={(item) => item.uri}
+                    horizontal={true}
+                />
             </View>
+
             <View style={styles.textInputView}>
                 <TextInput 
                     style={styles.textInput} 
@@ -297,8 +333,19 @@ const AddDiaryPage = (props) => {
             <SubmitButton 
                 title="Salvar" 
                 onClick={() => {
-                    props.setCurrentPage("viewBuilding");
-                    //props.setCurrentBuilding(props.currentBuilding.concat())
+                    try{
+                        props.addDiary({
+                            date: date.toDateString(), 
+                            description: description,
+                            images: images
+                        });
+                        props.setCurrentPage("viewBuilding");
+                    }catch(err){
+                        if(err==="exists") {
+                            return;
+                        }
+                        console.log(err)
+                    }
                 }}
             />
         </Page>

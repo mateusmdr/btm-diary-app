@@ -315,6 +315,12 @@ const styles = StyleSheet.create({
         height: 28*vw,
         marginTop: 10,
         marginBottom: 20,
+    },
+    galeryImg: {
+        width: 25*vw,
+        height: 25*vw,
+        borderRadius: 8,
+        marginRight: 15,
     }
 });
 

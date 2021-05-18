@@ -6,7 +6,7 @@ import {HomePage,AddBuildingPage,ViewBuildingPage, EditBuildingPage, ViewDiaryPa
 
 import initialBuildings from './assets/buildings.json';
 
-const App = function App() {
+const App = () => {
   const [loaded] = useFonts({
     'OpenSans': require('./assets/fonts/OpenSans-Regular.ttf'),
     'OpenSans-Bold': require('./assets/fonts/OpenSans-Bold.ttf'),
@@ -17,7 +17,97 @@ const App = function App() {
   const [currentPage, setCurrentPage] = useState("home");
 
   const [currentBuilding, setCurrentBuilding] = useState(null);
-  const [currentDiary, setCurrentDiary] = useState(0);
+  const [currentDiary, setCurrentDiary] = useState(null);
+
+  const addBuilding = (newBuilding) => {
+    if(!newBuilding.name){
+      throw "empty";
+    }
+
+    if (buildings.find(element => element.name === newBuilding.name)){
+      throw "exists";
+    }
+
+    setBuildings(buildings.concat(newBuilding));
+    //TODO: WRITE CHANGES TO JSON FILE
+  }
+  
+  const editBuilding = (newBuilding) => {
+    if(!newBuilding.name){
+      throw "empty";
+    }
+
+    if (buildings.find(element => element.name === newBuilding.name) && currentBuilding.name !== newBuilding.name){
+      throw "exists";
+    }
+
+    const currentBuildingIndex = buildings.findIndex(element => element.name === currentBuilding.name);
+
+    const updatedBuilding = Object.assign(buildings[currentBuildingIndex],newBuilding);
+    const updatedBuildings = Object.assign(buildings,{[currentBuildingIndex] : updatedBuilding})
+
+
+    setBuildings(updatedBuildings);
+    setCurrentBuilding(updatedBuilding);
+
+    //TODO: WRITE CHANGES TO JSON FILE
+  }
+
+  const removeBuilding = () => {
+    const currentBuildingIndex = buildings.findIndex(element => element.name === currentBuilding.name);
+
+    const firstPart = buildings.slice(0,currentBuildingIndex);
+    const lastPart = buildings.slice(currentBuildingIndex+1);
+    const updatedBuildings = firstPart.concat(lastPart);
+    
+    setBuildings(updatedBuildings);
+
+    //TODO: WRITE CHANGES TO JSON FILE
+  }
+
+  const addDiary = (newDiary) => {
+
+    if(newDiary.description === "") {
+      throw "empty";
+    }
+
+    const currentDiaries = currentBuilding.diaries;
+
+    if (currentDiaries.find(element => element.date === newDiary.date)){
+      throw "exists";
+    }
+
+    const updatedDiaries = currentDiaries.concat(newDiary);
+
+    const updatedBuilding = {...currentBuilding,...{diaries: updatedDiaries}};
+
+    setCurrentBuilding(updatedBuilding); // Apply changes to main array (buildings)
+  }
+
+  const editDiary = (newDiary) => {
+    const currentDiaryIndex = diaries.findIndex(element => element.date === currentDiary.date);
+    let updatedDiaries = currentBuilding.diaries;
+    updatedDiaries[currentDiaryIndex] = newDiary;
+
+    let updatedBuilding = currentBuilding;
+    updatedBuilding.diaries = updatedDiaries;
+
+    editBuilding(updatedBuilding); // Apply changes to main array (buildings)
+  }
+
+  const removeDiary = () => {
+    const currentDiaryIndex = diaries.findIndex(element => element.date === currentDiary.date);
+    let updatedDiaries = currentBuilding.diaries[currentDiaryIndex];
+
+    const firstPart = updatedDiaries.slice(0,currentDiaryIndex);
+    const lastPart = updatedDiaries.slice(currentDiaryIndex+1);
+    updatedDiaries = firstPart.concat(lastPart);
+
+    let updatedBuilding = currentBuilding;
+    updatedBuilding.diaries = updatedDiaries;
+
+    editBuilding(updatedBuilding); // Apply changes to main array (buildings)
+  }
 
   if (!loaded) return null;
 
@@ -36,7 +126,7 @@ const App = function App() {
       <AddBuildingPage 
         buildings={buildings} 
         setCurrentPage={setCurrentPage}
-        setBuildings={setBuildings}
+        addBuilding={addBuilding}
       />
     );
   }
@@ -44,7 +134,7 @@ const App = function App() {
   if (currentPage === "viewBuilding"){
     return(
       <ViewBuildingPage 
-        setCurrentPage={setCurrentPage} 
+        setCurrentPage={setCurrentPage}
         currentBuilding={currentBuilding}
         setCurrentDiary={setCurrentDiary} 
       />
@@ -55,9 +145,9 @@ const App = function App() {
     return (
       <EditBuildingPage
         setCurrentPage={setCurrentPage}
-        setBuildings={setBuildings}
-        buildings={buildings}
         currentBuilding={currentBuilding}
+        editBuilding={editBuilding}
+        removeBuilding={removeBuilding}
       />
     )
   }
@@ -67,8 +157,7 @@ const App = function App() {
       <AddDiaryPage
         setCurrentPage={setCurrentPage}
         currentBuilding={currentBuilding}
-        setCurrentBuilding={setCurrentBuilding}
-        currentDiary={currentDiary}
+        addDiary={addDiary}
       />
     );
   }
@@ -77,6 +166,20 @@ const App = function App() {
     return (
       <ViewDiaryPage
         setCurrentPage={setCurrentPage}
+        currentBuilding={currentBuilding}
+        currentDiary={currentDiary}
+      />
+    );
+  }
+
+  if (currentPage === "editDiary") {
+    return (
+      <EditDiaryPage
+        setCurrentPage={setCurrentPage}
+        currentBuilding={currentBuilding}
+        currentDiary={currentDiary}
+        editDiary={editDiary}
+        removeDiary={removeDiary}
       />
     );
   }

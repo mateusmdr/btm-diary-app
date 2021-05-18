@@ -105,7 +105,7 @@ const ErrorDialog = (props) => {
 
 const AddGalery = (props) => {
     return(
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={props.onClick}>
             <View style={styles.addGaleryButton}>
                 <AddImg 
                     width={styles.addGaleryImg.width} 
