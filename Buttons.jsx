@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet,View, TouchableHighlight,TouchableWithoutFeedback, Text,TouchableOpacity} from 'react-native';
+import {StyleSheet,View, TouchableHighlight,TouchableWithoutFeedback, Text,TouchableOpacity,Image} from 'react-native';
 import styles from './assets/stylesheet.js';
 
 import {AddImg,EditImg,RemoveImg,ArrowImg,AlertImg,XImg, SearchImg} from './assets/SvgComponents.jsx';
@@ -138,4 +138,18 @@ const DateInput = (props) => {
     );
 }
 
-export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog, AddGalery, XButton,DateInput};
+const ImagePopUp = (props) => {
+    return(
+        <View style={styles.popUp}>
+            <View style={styles.imagePopUpContainer}>
+                <XButton onClick={props.xButton}/>
+                <Image source={{uri: props.uri}} style={styles.imagePopUp}/>
+                <View style={styles.imageRemoveButton}>
+                    <RemoveButton onClick={props.removeButton}/>
+                </View>
+            </View>
+        </View>
+    );
+}
+
+export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog, AddGalery, XButton,DateInput,ImagePopUp};

@@ -371,6 +371,30 @@ const styles = StyleSheet.create({
     dateSearchImg: {
         marginRight: 10,
     },
+    imagePopUpContainer: {
+
+        padding: 8*vw,
+        backgroundColor: 'white',
+    },
+    imagePopUp: {
+        width: 68*vw,
+        height: 68*vw,
+    },
+    xButtonImg: {
+        width: 5*vw,
+        height: 5*vw,
+    },
+    xButton: {
+        position: 'absolute',
+        right: 2*vw,
+        top: 2*vw
+    },
+    imageRemoveButton: {
+        position: 'absolute',
+        right: 1*vw,
+        bottom: 1*vw,
+        transform: [{scale: 0.8}]
+    }
 });
 
 export default styles;

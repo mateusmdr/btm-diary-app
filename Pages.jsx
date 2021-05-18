@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, Image, KeyboardAvoidingView} from 'react-native';
-import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, AddGalery,DateInput} from './Buttons';
+import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, AddGalery,DateInput, ImagePopUp} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
 
@@ -264,6 +264,8 @@ const AddDiaryPage = (props) => {
     const [existsPopUp, setExistsPopUp] = useState(false);
     const [emptyPopUp, setEmptyPopUp] = useState(false);
 
+    const [imagePopUp, setImagePopUp] = useState(null);
+
     useEffect(() => {
         (async () => {
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -301,18 +303,9 @@ const AddDiaryPage = (props) => {
 
             return (
                 <View>
-                    <View style={styles.floatButton2}>
-                    <RemoveButton 
-                        onClick={() => {
-                            const firstPart = images.slice(0,index-1);
-                            const lastPart = images.slice(index);
-                            const updatedImages = firstPart.concat(lastPart);
-
-                            setImages(updatedImages);
-                        }}
-                    />
-                    </View>
-                    <Image source={{uri: item.uri}} style={styles.galeryImg}/>
+                    <TouchableWithoutFeedback onPress={()=> setImagePopUp(item.uri)}>
+                        <Image source={{uri: item.uri}} style={styles.galeryImg}/>
+                    </TouchableWithoutFeedback>
                 </View>
             );
     }
@@ -384,6 +377,22 @@ const AddDiaryPage = (props) => {
                     }
                 }}
             />
+            {imagePopUp && (<ImagePopUp
+                uri={imagePopUp}
+                xButton={() => setImagePopUp(null)}
+                removeButton={
+                    () => {
+                        const image = images.find(element => element.uri === imagePopUp);
+                        const index = images.indexOf(image);
+                        const firstPart = images.slice(0,index);
+                        const lastPart = images.slice(index+1);
+                        const updatedImages = firstPart.concat(lastPart);
+
+                        setImages(updatedImages);
+                        setImagePopUp(null);
+                    }
+                }
+            />)}
             <ErrorDialog
                 onClick={()=> setEmptyPopUp(false)}
                 message= {(
