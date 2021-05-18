@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useFonts} from 'expo-font';
 
 /*Pages*/
-import {HomePage,AddBuildingPage,ViewBuildingPage, EditBuildingPage, ViewDiaryPage, AddDiaryPage} from './Pages';
+import {HomePage,AddBuildingPage,ViewBuildingPage, EditBuildingPage, ViewDiaryPage, AddDiaryPage, EditDiaryPage} from './Pages';
 
 import initialBuildings from './assets/buildings.json';
 

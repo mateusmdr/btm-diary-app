@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet,View, TouchableHighlight,TouchableWithoutFeedback, Text,TouchableOpacity} from 'react-native';
 import styles from './assets/stylesheet.js';
 
-import {AddImg,EditImg,RemoveImg,ArrowImg,AlertImg} from './assets/SvgComponents.jsx';
+import {AddImg,EditImg,RemoveImg,ArrowImg,AlertImg,XImg, SearchImg} from './assets/SvgComponents.jsx';
 
 const AddButton = (props) => {
     return (
@@ -117,4 +117,25 @@ const AddGalery = (props) => {
     );
 }
 
-export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog, AddGalery};
+const XButton = (props) => {
+    return(
+        <TouchableWithoutFeedback onPress={props.onClick}>
+            <View style={styles.xButton}>
+                <XImg/>
+            </View>
+        </TouchableWithoutFeedback>
+    );
+}
+
+const DateInput = (props) => {
+    return(
+        <TouchableHighlight onPress={props.onClick}>
+            <View style={styles.dateInput}>
+                <SearchImg width={styles.searchImg.width} height={styles.searchImg.height} style={styles.dateSearchImg}/>
+                <Text style={styles.dateInputText}>{props.date}</Text>
+            </View>
+        </TouchableHighlight>
+    );
+}
+
+export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog, AddGalery, XButton,DateInput};

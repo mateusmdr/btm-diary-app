@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, Image} from 'react-native';
-import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, AddGalery} from './Buttons';
+import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, Image, KeyboardAvoidingView} from 'react-native';
+import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, AddGalery,DateInput} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
 
@@ -9,6 +9,7 @@ import styles from './assets/stylesheet';
 import {getFullDate,getWeekDay} from './lib/utilities.js';
 
 import * as ImagePicker from 'expo-image-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Page = (props) => {
     return (
@@ -89,7 +90,7 @@ const AddBuildingPage = (props) => {
                 title="Cadastrar" 
                 onClick={() => {
                     try{
-                        props.addBuilding({name: textInput});
+                        props.addBuilding({name: textInput, diaries: []});
                         props.setCurrentPage("home");
                     }catch (err){
                         //Input is empty
@@ -120,6 +121,55 @@ const AddBuildingPage = (props) => {
                 )}
                 condition={existsPopUp}
             />
+        </Page>
+    );
+}
+
+const Diary = (props) => {
+    const date = new Date(props.item.date);
+    const fullDate = getFullDate(date);
+    const weekDay = getWeekDay(date);
+    return (
+        <TouchableWithoutFeedback
+            onPress={() => {
+                props.setCurrentPage("viewDiary");
+                props.setCurrentDiary(props.item);
+            }}
+        >
+            <View style={styles.diary}>
+                <Text numberOfLines={2} style={styles.diaryH2}>{props.item.description}</Text>
+                <Text style={styles.diaryH1}>{fullDate + " ("+ weekDay + ")"}</Text>
+            </View>
+        </TouchableWithoutFeedback>
+    );
+}
+
+const ViewBuildingPage = (props) => {
+    const renderDiary = ({item}) => {
+        return(
+            <Diary 
+                item={item} 
+                setCurrentPage={props.setCurrentPage}
+                setCurrentDiary={props.setCurrentDiary}
+            />
+        );
+    };
+    return(
+        <Page>
+            <ArrowButton onClick={() => props.setCurrentPage("home")}/>
+            <Text style={styles.title}>{props.currentBuilding.name}</Text>
+            <SearchBar/>
+            <View style={styles.diaryList}>
+                <FlatList 
+                    data={props.currentBuilding.diaries} 
+                    renderItem={renderDiary}
+                    keyExtractor={(item) => getFullDate(new Date(item.date))}
+                />
+            </View>
+            <View style={styles.buttonList}>
+                <EditButton onClick={() => props.setCurrentPage("editBuilding")}/>
+                <AddButton onClick={() => props.setCurrentPage("addDiary")}/>
+            </View>
         </Page>
     );
 }
@@ -202,71 +252,17 @@ const EditBuildingPage = (props) => {
     );
 }
 
-const Diary = (props) => {
-    const date = new Date(props.item.date);
-    const fullDate = getFullDate(date);
-    const weekDay = getWeekDay(date);
-    return (
-        <TouchableWithoutFeedback
-            onPress={() => {
-                props.setCurrentPage("viewDiary");
-                props.setCurrentDiary(props.item);
-            }}
-        >
-            <View style={styles.diary}>
-                <Text style={styles.diaryH2}>{props.item.description}</Text>
-                <Text style={styles.diaryH1}>{fullDate + " ("+ weekDay + ")"}</Text>
-            </View>
-        </TouchableWithoutFeedback>
-    );
-}
-
-const ViewBuildingPage = (props) => {
-    const renderDiary = ({item}) => {
-        return(
-            <Diary 
-                item={item} 
-                setCurrentPage={props.setCurrentPage}
-                setCurrentDiary={props.setCurrentDiary}
-            />
-        );
-    };
-    return(
-        <Page>
-            <ArrowButton onClick={() => props.setCurrentPage("home")}/>
-            <Text style={styles.title}>{props.currentBuilding.name}</Text>
-            <SearchBar/>
-            <View style={styles.diaryList}>
-                <FlatList 
-                    data={props.currentBuilding.diaries} 
-                    renderItem={renderDiary}
-                    keyExtractor={(item) => getFullDate(new Date(item.date))}
-                />
-            </View>
-            <View style={styles.buttonList}>
-                <EditButton onClick={() => props.setCurrentPage("editBuilding")}/>
-                <AddButton onClick={() => props.setCurrentPage("addDiary")}/>
-            </View>
-        </Page>
-    );
-}
-
-const ViewDiaryPage = (props) => {
-    return (
-        <Page>
-            <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
-            <AddGalery/>
-        </Page>
-    );
-}
-
 const AddDiaryPage = (props) => {
-    const date = new Date();    
-    const currentDate = getFullDate(date);
+    const [date, setDate] = useState(new Date());
     
     const [description, setDescription] = useState("");
 
     const [images, setImages] = useState([]);
+
+    const [calendarPopUp, setCalendarPopUp] = useState(false);
+
+    const [existsPopUp, setExistsPopUp] = useState(false);
+    const [emptyPopUp, setEmptyPopUp] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -292,7 +288,7 @@ const AddDiaryPage = (props) => {
 
     const addButton = [{uri: "addButton"}];
 
-    const renderImage = ({item}) => {
+    const renderImage = ({item,index}) => {
             if(item.uri === "addButton"){
                 return (
                     <AddGalery 
@@ -304,7 +300,20 @@ const AddDiaryPage = (props) => {
             }
 
             return (
-                <Image source={{uri: item.uri}} style={styles.galeryImg}/>
+                <View>
+                    <View style={styles.floatButton2}>
+                    <RemoveButton 
+                        onClick={() => {
+                            const firstPart = images.slice(0,index-1);
+                            const lastPart = images.slice(index);
+                            const updatedImages = firstPart.concat(lastPart);
+
+                            setImages(updatedImages);
+                        }}
+                    />
+                    </View>
+                    <Image source={{uri: item.uri}} style={styles.galeryImg}/>
+                </View>
             );
     }
 
@@ -312,9 +321,28 @@ const AddDiaryPage = (props) => {
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")}/>
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
-            <Text style={styles.diaryH1}>{currentDate}</Text>
+            <DateInput
+                onClick={()=> setCalendarPopUp(true)}
+                date={getFullDate(date) + " (" + getWeekDay(date) + ")"}
+            />
+            {calendarPopUp && (
+                <DateTimePicker 
+                    mode={"date"}
+                    value={date}
+                    onChange={(event,value) =>{
+                        if(event.type==="set"){
+                            setCalendarPopUp(false);
+                            setDate(value);
+                        }
+                        if(event.type==="dismissed"){
+                            setCalendarPopUp(false);
+                        }
+                    }}
+                    maximumDate={new Date()}
+                />
+            )}
             <Text style={styles.subtitle}>Galeria</Text>
-            <View style={styles.addGaleryScrollView}>
+            <View style={styles.galeryList}>
                 <FlatList 
                     data={addButton.concat(images)}
                     renderItem={renderImage}
@@ -323,13 +351,18 @@ const AddDiaryPage = (props) => {
                 />
             </View>
 
-            <View style={styles.textInputView}>
+            <KeyboardAvoidingView 
+                style={styles.textInputView}
+                behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+            >
                 <TextInput 
-                    style={styles.textInput} 
+                    style={styles.textInputDiary} 
                     placeholder="Descrição"
                     onChangeText={setDescription}
+                    multiline={true}
+                    textAlignVertical= "top"
                 />
-            </View>
+            </KeyboardAvoidingView>
             <SubmitButton 
                 title="Salvar" 
                 onClick={() => {
@@ -342,14 +375,68 @@ const AddDiaryPage = (props) => {
                         props.setCurrentPage("viewBuilding");
                     }catch(err){
                         if(err==="exists") {
+                            setExistsPopUp(true);
                             return;
                         }
-                        console.log(err)
+                        if(err==="empty"){
+                            setEmptyPopUp(true);
+                        }
                     }
                 }}
+            />
+            <ErrorDialog
+                onClick={()=> setEmptyPopUp(false)}
+                message= {(
+                    <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Nenhuma descrição foi fornecida</Text>
+                )}
+                condition={emptyPopUp}
+            />
+            <ErrorDialog
+                onClick={() => setExistsPopUp(false)}
+                message= {(
+                    <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Já existe um diário referente a esta data</Text>
+                )}
+                condition={existsPopUp}
             />
         </Page>
     );
 }
 
-export {HomePage, AddBuildingPage,ViewBuildingPage, EditBuildingPage, AddDiaryPage, ViewDiaryPage};
+const ViewDiaryPage = (props) => {
+    const date = new Date(props.currentDiary.date);
+    const diaryDate = getFullDate(date) + " ("+ getWeekDay(date) + ")";
+
+    return (
+        <Page>
+            <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
+            <Text style={styles.title}>{props.currentBuilding.name}</Text>
+            <Text style={styles.diaryH1}>{diaryDate}</Text>
+
+            {props.currentDiary.images.length ? (
+                <View style={styles.galeryList}>
+                    <FlatList 
+                        data={props.currentDiary.images}
+                        renderItem={({item}) => <Image source={{uri: item.uri}} style={styles.galeryImg}/>}
+                        keyExtractor={(item) => item.uri}
+                        horizontal={true}
+                    />
+                </View>
+            ): null}
+            <Text style={styles.diaryDescription}>{props.currentDiary.description}</Text>
+            
+            <View style={styles.buttonList}>
+                <EditButton onClick={() => props.setCurrentPage("editDiary")}/>
+            </View>
+        </Page>
+    );
+}
+
+const EditDiaryPage = (props) => {
+    return (
+        <Page>
+            <ArrowButton onClick={() => props.setCurrentPage("viewDiary")}/>
+        </Page>
+    )
+}
+
+export {HomePage, AddBuildingPage,ViewBuildingPage, EditBuildingPage, AddDiaryPage, ViewDiaryPage, EditDiaryPage};

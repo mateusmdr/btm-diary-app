@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'OpenSans',
         alignSelf: 'flex-start',
-        paddingTop: 30,
+        paddingTop: 15,
     },
     label: {
         color: '#C2CFD6',
@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
     diaryList: {
         paddingBottom: 5*vh,
         paddingTop: 30,
+        maxHeight: 60*vh,
     },
     diary: {
         borderWidth: 2,
@@ -206,6 +207,7 @@ const styles = StyleSheet.create({
     diaryH2: {
         color: '#C2CFD6',
         fontFamily: 'OpenSans',
+        paddingBottom: 5,
     },
     popUp : {
         width: 100*vw,
@@ -310,18 +312,65 @@ const styles = StyleSheet.create({
         width: 7*vw,
         height: 7*vw,
     },
-    addGaleryScrollView: {
+    galeryList: {
         minWidth: 82*vw,
         height: 28*vw,
         marginTop: 10,
-        marginBottom: 20,
     },
     galeryImg: {
         width: 25*vw,
         height: 25*vw,
         borderRadius: 8,
         marginRight: 15,
-    }
+    },
+    diaryDescription: {
+        fontFamily: 'OpenSans',
+        fontSize: 16,
+        color: '#C2CFD6',
+        textAlign: 'justify',
+        paddingTop: 20,
+        alignSelf: 'flex-start',
+        maxWidth: 40*vh,
+    },
+    textInputDiary: {
+        height: 20*vh,
+        width: 82*vw,
+        borderColor: '#C2CFD6',
+        borderWidth: 1.6,
+        borderStyle: 'solid',
+        borderRadius: 4,
+        paddingLeft: 5*vw,
+        paddingRight: 20,
+        paddingTop: 20,
+        marginTop: 10,
+        marginBottom: 5,
+        fontSize: normalize(20),
+        fontFamily: 'OpenSans',
+        backgroundColor: 'white',
+    },
+    floatButton2: {
+        position: 'absolute',
+        top: -15,
+        right: 0,
+        zIndex: 1,
+        transform: [{scale: 3/4}]
+    },
+    dateInput: {
+        backgroundColor: '#474D7B',
+        padding: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderRadius: 5,
+        minWidth: 70*vw,
+    },
+    dateInputText: {
+        color: 'white',
+        fontFamily: 'OpenSans-Bold',
+        fontSize: 14,
+    },
+    dateSearchImg: {
+        marginRight: 10,
+    },
 });
 
 export default styles;
