@@ -144,9 +144,11 @@ const ImagePopUp = (props) => {
             <View style={styles.imagePopUpContainer}>
                 <XButton onClick={props.xButton}/>
                 <Image source={{uri: props.uri}} style={styles.imagePopUp}/>
+                {props.removeButton && (
                 <View style={styles.imageRemoveButton}>
                     <RemoveButton onClick={props.removeButton}/>
                 </View>
+                )}
             </View>
         </View>
     );

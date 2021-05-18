@@ -415,6 +415,18 @@ const ViewDiaryPage = (props) => {
     const date = new Date(props.currentDiary.date);
     const diaryDate = getFullDate(date) + " ("+ getWeekDay(date) + ")";
 
+    const [imagePopUp, setImagePopUp] = useState(null);
+
+    const renderImage = ({item}) => {
+        return (
+            <View>
+                <TouchableWithoutFeedback onPress={()=> setImagePopUp(item.uri)}>
+                    <Image source={{uri: item.uri}} style={styles.galeryImg}/>
+                </TouchableWithoutFeedback>
+            </View>
+        );
+    }
+
     return (
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
@@ -425,7 +437,7 @@ const ViewDiaryPage = (props) => {
                 <View style={styles.galeryList}>
                     <FlatList 
                         data={props.currentDiary.images}
-                        renderItem={({item}) => <Image source={{uri: item.uri}} style={styles.galeryImg}/>}
+                        renderItem={renderImage}
                         keyExtractor={(item) => item.uri}
                         horizontal={true}
                     />
@@ -436,6 +448,12 @@ const ViewDiaryPage = (props) => {
             <View style={styles.buttonList}>
                 <EditButton onClick={() => props.setCurrentPage("editDiary")}/>
             </View>
+
+            {imagePopUp && (<ImagePopUp
+                uri={imagePopUp}
+                xButton={() => setImagePopUp(null)}
+                removeButton={null}
+            />)}
         </Page>
     );
 }
