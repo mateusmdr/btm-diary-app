@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, Image, KeyboardAvoidingView} from 'react-native';
-import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, AddGalery,DateInput, ImagePopUp} from './Buttons';
+import React, {useState} from 'react';
+import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, SubmitButtons,DateInput, ImagePopUp, GaleryImgList} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
 
@@ -260,55 +260,10 @@ const AddDiaryPage = (props) => {
     const [images, setImages] = useState([]);
 
     const [calendarPopUp, setCalendarPopUp] = useState(false);
-
     const [existsPopUp, setExistsPopUp] = useState(false);
     const [emptyPopUp, setEmptyPopUp] = useState(false);
-
     const [imagePopUp, setImagePopUp] = useState(null);
 
-    useEffect(() => {
-        (async () => {
-            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (status !== 'granted') {
-                alert('Erro: É necessário fornecer permissões de acesso à galeria do dispositivo');
-            }
-        })();
-    }, []);
-
-    const pickImage = async() => {
-        let result = await ImagePicker.launchImageLibraryAsync({ 
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [1,1],
-            quality: 1,
-        });
-
-        if (!result.cancelled) {
-            setImages(images.concat({uri: result.uri}));
-        }
-    }
-
-    const addButton = [{uri: "addButton"}];
-
-    const renderImage = ({item,index}) => {
-            if(item.uri === "addButton"){
-                return (
-                    <AddGalery 
-                        onClick={() => {
-                            pickImage();
-                        }}
-                    />
-                );
-            }
-
-            return (
-                <View>
-                    <TouchableWithoutFeedback onPress={()=> setImagePopUp(item.uri)}>
-                        <Image source={{uri: item.uri}} style={styles.galeryImg}/>
-                    </TouchableWithoutFeedback>
-                </View>
-            );
-    }
 
     return (
         <Page>
@@ -335,14 +290,13 @@ const AddDiaryPage = (props) => {
                 />
             )}
             <Text style={styles.subtitle}>Galeria</Text>
-            <View style={styles.galeryList}>
-                <FlatList 
-                    data={addButton.concat(images)}
-                    renderItem={renderImage}
-                    keyExtractor={(item) => item.uri}
-                    horizontal={true}
-                />
-            </View>
+
+            <GaleryImgList
+                addButton={true}
+                images={images}
+                setImagePopUp={setImagePopUp}
+                setImages={setImages}
+            />
 
             <KeyboardAvoidingView 
                 style={styles.textInputView}
@@ -377,22 +331,13 @@ const AddDiaryPage = (props) => {
                     }
                 }}
             />
-            {imagePopUp && (<ImagePopUp
+            <ImagePopUp
                 uri={imagePopUp}
-                xButton={() => setImagePopUp(null)}
-                removeButton={
-                    () => {
-                        const image = images.find(element => element.uri === imagePopUp);
-                        const index = images.indexOf(image);
-                        const firstPart = images.slice(0,index);
-                        const lastPart = images.slice(index+1);
-                        const updatedImages = firstPart.concat(lastPart);
-
-                        setImages(updatedImages);
-                        setImagePopUp(null);
-                    }
-                }
-            />)}
+                removeButton={true}
+                setImagePopUp={setImagePopUp}
+                setImages={setImages}
+                images={images}
+            />
             <ErrorDialog
                 onClick={()=> setEmptyPopUp(false)}
                 message= {(
@@ -417,15 +362,45 @@ const ViewDiaryPage = (props) => {
 
     const [imagePopUp, setImagePopUp] = useState(null);
 
-    const renderImage = ({item}) => {
-        return (
-            <View>
-                <TouchableWithoutFeedback onPress={()=> setImagePopUp(item.uri)}>
-                    <Image source={{uri: item.uri}} style={styles.galeryImg}/>
-                </TouchableWithoutFeedback>
+    return (
+        <Page>
+            <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
+            <Text style={styles.title}>{props.currentBuilding.name}</Text>
+            <Text style={styles.diaryH1}>{diaryDate}</Text>
+
+            <GaleryImgList
+                images={props.currentDiary.images}
+                addButton={false}
+                setImagePopUp={setImagePopUp}
+            />
+            <Text style={styles.diaryDescription}>{props.currentDiary.description}</Text>
+            
+            <View style={styles.buttonList}>
+                <EditButton onClick={() => props.setCurrentPage("editDiary")}/>
             </View>
-        );
-    }
+
+            <ImagePopUp
+                uri={imagePopUp}
+                removeButton={false}
+                setImagePopUp={setImagePopUp}
+            />
+        </Page>
+    );
+}
+
+const EditDiaryPage = (props) => {
+    const date = new Date(props.currentDiary.date);
+    const diaryDate = getFullDate(date) + " ("+ getWeekDay(date) + ")";
+
+    const [images, setImages] = useState(props.currentDiary.images);
+    const [imagePopUp, setImagePopUp] = useState(null);
+    
+    const [textInput,setTextInput] = useState(props.currentDiary.description);
+
+    const [cancelPopUp,setCancelPopUp] = useState(false);
+    const [removePopUp,setRemovePopUp] = useState(false);
+    const [existsPopUp,setExistsPopUp] = useState(false);
+    const [emptyPopUp,setEmptyPopUp] = useState(false);
 
     return (
         <Page>
@@ -433,37 +408,108 @@ const ViewDiaryPage = (props) => {
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
             <Text style={styles.diaryH1}>{diaryDate}</Text>
 
-            {props.currentDiary.images.length ? (
-                <View style={styles.galeryList}>
-                    <FlatList 
-                        data={props.currentDiary.images}
-                        renderItem={renderImage}
-                        keyExtractor={(item) => item.uri}
-                        horizontal={true}
-                    />
-                </View>
-            ): null}
-            <Text style={styles.diaryDescription}>{props.currentDiary.description}</Text>
-            
-            <View style={styles.buttonList}>
-                <EditButton onClick={() => props.setCurrentPage("editDiary")}/>
-            </View>
+            <GaleryImgList
+                images={images}
+                addButton={true}
+                setImagePopUp={setImagePopUp}
+                setImages={setImages}
+            />            
 
-            {imagePopUp && (<ImagePopUp
+            <TextInput 
+                style={styles.diaryDescription}
+                defaultValue={props.currentDiary.description}
+                multiline={true}
+                textAlign="center"
+                textAlignVertical="top"
+                onChangeText={setTextInput}
+            />
+
+            <SubmitButtons
+                onClick1={() => {
+                    const newDiary = {date: date.toDateString(), description: textInput, images: images};
+                    if(JSON.stringify(newDiary) !== JSON.stringify(props.currentDiary)){
+                        setCancelPopUp(true);
+                    }else {
+                        props.setCurrentPage("viewDiary");
+                    }
+                }}
+                onClick2={() => {
+                    try{
+                        props.editDiary({
+                            date: date.toDateString(),
+                            description: textInput, 
+                            images: images
+                        });
+                        props.setCurrentPage("viewDiary");
+                    }catch(err){
+                        alert(err);
+                        if(err==="exists") {
+                            setExistsPopUp(true);
+                            return;
+                        }
+                        if(err==="empty"){
+                            setEmptyPopUp(true);
+                        }
+                    }
+                }}
+                titles = {["Cancelar", "Salvar"]}
+            />
+
+            <ImagePopUp
                 uri={imagePopUp}
-                xButton={() => setImagePopUp(null)}
-                removeButton={null}
-            />)}
+                removeButton={true}
+                setImagePopUp={setImagePopUp}
+                setImages={setImages}
+                images={images}
+            />
+            <View style={StyleSheet.compose(styles.buttonList,{marginBottom: 50})}>
+                <RemoveButton onClick={() => setRemovePopUp(true)}/>
+            </View>
+            <ConfirmationDialog
+                actions = {[
+                    () => {
+                        props.removeDiary(); 
+                        props.setCurrentPage("viewBuilding");
+                    },
+                    () => setRemovePopUp(false)
+                ]}
+                titles = {["Deletar", "Cancelar"]}
+                message = {(
+                    <Text style={styles.confirmationDialogMessage}>
+                        Você tem certeza que deseja <Text style={styles.bold}>deletar</Text> essas anotações?
+                    </Text>
+                )}
+                condition={removePopUp}
+            />
+            <ConfirmationDialog
+                actions = {[
+                    () => props.setCurrentPage("viewDiary"),
+                    () => setCancelPopUp(false)
+                ]}
+                titles = {["Concluir", "Continuar"]}
+                message = {(
+                    <Text style={styles.confirmationDialogMessage}>
+                        Ao cancelar, as informações atualizadas <Text style={styles.bold}>não serão salvas.</Text>
+                    </Text>
+                )}
+                condition={cancelPopUp}
+            />
+            <ErrorDialog
+                onClick={()=> setEmptyPopUp(false)}
+                message= {(
+                    <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Nenhuma descrição foi fornecida</Text>
+                )}
+                condition={emptyPopUp}
+            />
+            <ErrorDialog
+                onClick={() => setExistsPopUp(false)}
+                message= {(
+                    <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Já existe um diário referente a esta data</Text>
+                )}
+                condition={existsPopUp}
+            />
         </Page>
     );
-}
-
-const EditDiaryPage = (props) => {
-    return (
-        <Page>
-            <ArrowButton onClick={() => props.setCurrentPage("viewDiary")}/>
-        </Page>
-    )
 }
 
 export {HomePage, AddBuildingPage,ViewBuildingPage, EditBuildingPage, AddDiaryPage, ViewDiaryPage, EditDiaryPage};

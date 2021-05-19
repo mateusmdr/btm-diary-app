@@ -85,7 +85,16 @@ const App = () => {
   }
 
   const editDiary = (newDiary) => {
-    const currentDiaryIndex = diaries.findIndex(element => element.date === currentDiary.date);
+    const currentDiaryIndex = currentBuilding.diaries.findIndex(element => element.date === currentDiary.date);
+
+    if(newDiary.description === "") {
+      throw "empty";
+    }
+
+    if(newDiary.date !== currentDiary.date && currentBuilding.find((element) => element.date === newDiary.date)){
+      throw "exists";
+    }
+
     let updatedDiaries = currentBuilding.diaries;
     updatedDiaries[currentDiaryIndex] = newDiary;
 
@@ -93,11 +102,12 @@ const App = () => {
     updatedBuilding.diaries = updatedDiaries;
 
     editBuilding(updatedBuilding); // Apply changes to main array (buildings)
+    setCurrentDiary(newDiary);
   }
 
   const removeDiary = () => {
-    const currentDiaryIndex = diaries.findIndex(element => element.date === currentDiary.date);
-    let updatedDiaries = currentBuilding.diaries[currentDiaryIndex];
+    const currentDiaryIndex = currentBuilding.diaries.findIndex(element => element.date === currentDiary.date);
+    let updatedDiaries = currentBuilding.diaries;
 
     const firstPart = updatedDiaries.slice(0,currentDiaryIndex);
     const lastPart = updatedDiaries.slice(currentDiaryIndex+1);

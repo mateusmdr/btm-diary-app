@@ -251,7 +251,6 @@ const styles = StyleSheet.create({
     },
     confirmationDialogView2: {
         width: 30*vw,
-
         backgroundColor: '#303450',
         marginLeft: 10,
         borderRadius: 4,
@@ -260,6 +259,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         padding: 10,
         fontFamily: 'OpenSans-Bold',
+        color: '#303450',
     },
     confirmationDialogButton2: {
         textAlign: 'center',
@@ -394,6 +394,17 @@ const styles = StyleSheet.create({
         right: 1*vw,
         bottom: 1*vw,
         transform: [{scale: 0.8}]
+    },
+    submitButtonsView: {
+        flexDirection:'row', 
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        width: 100*vw,
+        paddingRight: 9*vw,
+        paddingLeft: 9*vw,
+        height: 10*vh,
+        position: 'absolute',
+        bottom: 0
     }
 });
 

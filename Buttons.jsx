@@ -1,8 +1,10 @@
-import React from 'react';
-import {StyleSheet,View, TouchableHighlight,TouchableWithoutFeedback, Text,TouchableOpacity,Image} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet,View, TouchableHighlight,TouchableWithoutFeedback, Text,TouchableOpacity,Image, FlatList} from 'react-native';
 import styles from './assets/stylesheet.js';
 
 import {AddImg,EditImg,RemoveImg,ArrowImg,AlertImg,XImg, SearchImg} from './assets/SvgComponents.jsx';
+
+import * as ImagePicker from 'expo-image-picker';
 
 const AddButton = (props) => {
     return (
@@ -140,18 +142,114 @@ const DateInput = (props) => {
 
 const ImagePopUp = (props) => {
     return(
-        <View style={styles.popUp}>
-            <View style={styles.imagePopUpContainer}>
-                <XButton onClick={props.xButton}/>
-                <Image source={{uri: props.uri}} style={styles.imagePopUp}/>
-                {props.removeButton && (
-                <View style={styles.imageRemoveButton}>
-                    <RemoveButton onClick={props.removeButton}/>
+        props.uri && (
+            <View style={styles.popUp}>
+                <View style={styles.imagePopUpContainer}>
+                    <XButton onClick={() => props.setImagePopUp(null)}/>
+                    <Image source={{uri: props.uri}} style={styles.imagePopUp}/>
+                    {props.removeButton && (
+                    <View style={styles.imageRemoveButton}>
+                        <RemoveButton onClick={
+                            () => {
+                                const image = props.images.find(element => element.uri === props.uri);
+                                const index = props.images.indexOf(image);
+                                const firstPart = props.images.slice(0,index);
+                                const lastPart = props.images.slice(index+1);
+                                const updatedImages = firstPart.concat(lastPart);
+
+                                props.setImages(updatedImages);
+                                props.setImagePopUp(null);
+                            }}
+                        />
+                    </View>
+                    )}
                 </View>
-                )}
             </View>
+        )
+    );
+}
+
+const GaleryImgList = (props) => {
+
+    if(!props.addButton && props.images.length === 0){
+        return null;
+    }
+
+    let addButton = [];
+    if(props.addButton){
+        addButton = [{uri: "addButton"}];
+    }
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+                alert('Erro: É necessário fornecer permissões de acesso à galeria do dispositivo');
+            }
+        })();
+    }, []);
+
+    const pickImage = async() => {
+        let result = await ImagePicker.launchImageLibraryAsync({ 
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1,1],
+            quality: 1,
+        });
+
+        if (!result.cancelled) {
+            props.setImages(props.images.concat({uri: result.uri}));
+        }
+    }
+
+    const renderImage = ({item}) => {
+        if(item.uri === "addButton"){
+            return (
+                <AddGalery 
+                    onClick={() => {
+                        pickImage();
+                    }}
+                />
+            );
+        }
+
+        return (
+            <View>
+                <TouchableWithoutFeedback onPress={()=> props.setImagePopUp(item.uri)}>
+                    <Image source={{uri: item.uri}} style={styles.galeryImg}/>
+                </TouchableWithoutFeedback>
+            </View>
+        );
+    }
+
+    return (
+        <View style={styles.galeryList}>
+            <FlatList 
+                data={addButton.concat(props.images)}
+                renderItem={renderImage}
+                keyExtractor={(item) => item.uri}
+                horizontal={true}
+            />
         </View>
     );
 }
 
-export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog, AddGalery, XButton,DateInput,ImagePopUp};
+const SubmitButtons = (props) => {
+    return (
+        <View style={styles.submitButtonsView}>
+            <TouchableOpacity onPress={props.onClick1}>
+                <View style={styles.confirmationDialogView1}>
+                    <Text style={styles.confirmationDialogButton1}>{props.titles[0]}</Text>
+                </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={props.onClick2}>
+                <View style={styles.confirmationDialogView2}>
+                    <Text style={styles.confirmationDialogButton2}>{props.titles[1]}</Text>
+                </View>
+            </TouchableOpacity>
+        </View>
+    );
+
+}
+
+export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog, AddGalery, XButton,DateInput,ImagePopUp, GaleryImgList, SubmitButtons};
