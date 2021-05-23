@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {useFonts} from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 /*Pages*/
 import {HomePage,AddBuildingPage,ViewBuildingPage, EditBuildingPage, ViewDiaryPage, AddDiaryPage, EditDiaryPage} from './Pages';
@@ -12,12 +13,36 @@ const App = () => {
     'OpenSans-Bold': require('./assets/fonts/OpenSans-Bold.ttf'),
   });
 
-  const [buildings, setBuildings] = useState(initialBuildings);
+  const [buildings, setBuildings] = useState([]);
 
   const [currentPage, setCurrentPage] = useState("home");
 
   const [currentBuilding, setCurrentBuilding] = useState(null);
   const [currentDiary, setCurrentDiary] = useState(null);
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('buildings')
+      return jsonValue != null ? JSON.parse(jsonValue) : initialBuildings;
+    } catch(e) {
+      // error reading value
+    }
+  }
+
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem('buildings', jsonValue)
+    } catch (e) {
+      // saving error
+    }
+  }
+
+  useEffect(() => {
+    getData().then((data)=>setBuildings(data)); // Read stored data once app renders
+  }, [])
+
+  
 
   const addBuilding = (newBuilding) => {
     if(!newBuilding.name){
@@ -29,7 +54,7 @@ const App = () => {
     }
 
     setBuildings(buildings.concat(newBuilding));
-    //TODO: WRITE CHANGES TO JSON FILE
+    storeData(buildings);
   }
   
   const editBuilding = (newBuilding) => {
@@ -50,7 +75,7 @@ const App = () => {
     setBuildings(updatedBuildings);
     setCurrentBuilding(updatedBuilding);
 
-    //TODO: WRITE CHANGES TO JSON FILE
+    storeData(buildings);
   }
 
   const removeBuilding = () => {
@@ -62,7 +87,7 @@ const App = () => {
     
     setBuildings(updatedBuildings);
 
-    //TODO: WRITE CHANGES TO JSON FILE
+    storeData(buildings);
   }
 
   const addDiary = (newDiary) => {
@@ -82,6 +107,8 @@ const App = () => {
     const updatedBuilding = {...currentBuilding,...{diaries: updatedDiaries}};
 
     editBuilding(updatedBuilding); // Apply changes to main array (buildings)
+
+    storeData(buildings);
   }
 
   const editDiary = (newDiary) => {
@@ -103,6 +130,8 @@ const App = () => {
 
     editBuilding(updatedBuilding); // Apply changes to main array (buildings)
     setCurrentDiary(newDiary);
+
+    storeData(buildings);
   }
 
   const removeDiary = () => {
@@ -117,6 +146,8 @@ const App = () => {
     updatedBuilding.diaries = updatedDiaries;
 
     editBuilding(updatedBuilding); // Apply changes to main array (buildings)
+
+    storeData(buildings);
   }
 
   if (!loaded) return null;
