@@ -81,7 +81,7 @@ const App = () => {
 
     const updatedBuilding = {...currentBuilding,...{diaries: updatedDiaries}};
 
-    setCurrentBuilding(updatedBuilding); // Apply changes to main array (buildings)
+    editBuilding(updatedBuilding); // Apply changes to main array (buildings)
   }
 
   const editDiary = (newDiary) => {
@@ -91,7 +91,7 @@ const App = () => {
       throw "empty";
     }
 
-    if(newDiary.date !== currentDiary.date && currentBuilding.find((element) => element.date === newDiary.date)){
+    if(newDiary.date !== currentDiary.date && currentBuilding.diaries.find((element) => element.date === newDiary.date)){
       throw "exists";
     }
 

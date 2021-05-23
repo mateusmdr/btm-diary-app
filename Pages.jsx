@@ -7,8 +7,6 @@ import Header from './Header';
 import styles from './assets/stylesheet';
 
 import {getFullDate,getWeekDay} from './lib/utilities.js';
-
-import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Page = (props) => {
@@ -145,6 +143,9 @@ const Diary = (props) => {
 }
 
 const ViewBuildingPage = (props) => {
+    const [date, setDate] = useState(new Date());
+    const [calendarPopUp, setCalendarPopUp] = useState(false);
+    
     const renderDiary = ({item}) => {
         return(
             <Diary 
@@ -154,16 +155,37 @@ const ViewBuildingPage = (props) => {
             />
         );
     };
+
     return(
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("home")}/>
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
-            <SearchBar/>
+            <DateInput
+                onClick={()=> setCalendarPopUp(true)}
+                date={getFullDate(date) + " (" + getWeekDay(date) + ")"}
+            />
+            {calendarPopUp && (
+                <DateTimePicker 
+                    mode={"date"}
+                    value={date}
+                    onChange={(event,value) =>{
+                        if(event.type==="set"){
+                            setCalendarPopUp(false);
+                            setDate(value);
+                        }
+                        if(event.type==="dismissed"){
+                            setCalendarPopUp(false);
+                        }
+                    }}
+                    maximumDate={new Date()}
+                />
+            )}
             <View style={styles.diaryList}>
                 <FlatList 
                     data={props.currentBuilding.diaries} 
                     renderItem={renderDiary}
                     keyExtractor={(item) => getFullDate(new Date(item.date))}
+                    scrollIndicatorInsets={{ right: 100 }}
                 />
             </View>
             <View style={styles.buttonList}>
@@ -389,13 +411,14 @@ const ViewDiaryPage = (props) => {
 }
 
 const EditDiaryPage = (props) => {
-    const date = new Date(props.currentDiary.date);
-    const diaryDate = getFullDate(date) + " ("+ getWeekDay(date) + ")";
+    const [date, setDate] = useState(new Date(props.currentDiary.date));
 
     const [images, setImages] = useState(props.currentDiary.images);
     const [imagePopUp, setImagePopUp] = useState(null);
     
     const [textInput,setTextInput] = useState(props.currentDiary.description);
+
+    const [calendarPopUp,setCalendarPopUp] = useState(false);
 
     const [cancelPopUp,setCancelPopUp] = useState(false);
     const [removePopUp,setRemovePopUp] = useState(false);
@@ -406,7 +429,26 @@ const EditDiaryPage = (props) => {
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
-            <Text style={styles.diaryH1}>{diaryDate}</Text>
+            <DateInput
+                onClick={()=> setCalendarPopUp(true)}
+                date={getFullDate(date) + " (" + getWeekDay(date) + ")"}
+            />
+            {calendarPopUp && (
+                <DateTimePicker 
+                    mode={"date"}
+                    value={date}
+                    onChange={(event,value) =>{
+                        if(event.type==="set"){
+                            setCalendarPopUp(false);
+                            setDate(value);
+                        }
+                        if(event.type==="dismissed"){
+                            setCalendarPopUp(false);
+                        }
+                    }}
+                    maximumDate={new Date()}
+                />
+            )}
 
             <GaleryImgList
                 images={images}
@@ -454,7 +496,9 @@ const EditDiaryPage = (props) => {
                 }}
                 titles = {["Cancelar", "Salvar"]}
             />
-
+            <View style={StyleSheet.compose(styles.buttonList,{marginBottom: 50})}>
+                <RemoveButton onClick={() => setRemovePopUp(true)}/>
+            </View>
             <ImagePopUp
                 uri={imagePopUp}
                 removeButton={true}
@@ -462,9 +506,6 @@ const EditDiaryPage = (props) => {
                 setImages={setImages}
                 images={images}
             />
-            <View style={StyleSheet.compose(styles.buttonList,{marginBottom: 50})}>
-                <RemoveButton onClick={() => setRemovePopUp(true)}/>
-            </View>
             <ConfirmationDialog
                 actions = {[
                     () => {

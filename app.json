@@ -24,7 +24,8 @@
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "com.mateusmendoncadr.btmdiaryapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"

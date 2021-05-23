@@ -131,19 +131,22 @@ const XButton = (props) => {
 
 const DateInput = (props) => {
     return(
-        <TouchableHighlight onPress={props.onClick}>
-            <View style={styles.dateInput}>
-                <SearchImg width={styles.searchImg.width} height={styles.searchImg.height} style={styles.dateSearchImg}/>
-                <Text style={styles.dateInputText}>{props.date}</Text>
-            </View>
-        </TouchableHighlight>
+        <View style={styles.dateInputContainer}>
+            <TouchableHighlight onPress={props.onClick}>
+                <View style={styles.dateInput}>
+                    <SearchImg width={styles.searchImg.width} height={styles.searchImg.height} style={styles.dateSearchImg}/>
+                    <Text style={styles.dateInputText}>{props.date}</Text>
+                </View>
+            </TouchableHighlight>
+        </View>
     );
 }
 
 const ImagePopUp = (props) => {
     return(
         props.uri && (
-            <View style={styles.popUp}>
+            <TouchableWithoutFeedback onPress={() => props.setImagePopUp(null)}>
+                <View style={styles.popUp}>
                 <View style={styles.imagePopUpContainer}>
                     <XButton onClick={() => props.setImagePopUp(null)}/>
                     <Image source={{uri: props.uri}} style={styles.imagePopUp}/>
@@ -164,7 +167,8 @@ const ImagePopUp = (props) => {
                     </View>
                     )}
                 </View>
-            </View>
+                </View>
+            </TouchableWithoutFeedback>
         )
     );
 }
@@ -198,7 +202,8 @@ const GaleryImgList = (props) => {
         });
 
         if (!result.cancelled) {
-            props.setImages(props.images.concat({uri: result.uri}));
+            const newImg = [{uri: result.uri}];
+            props.setImages(newImg.concat(props.images));
         }
     }
 

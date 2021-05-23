@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 4*vw,
         bottom: 4*vh,
+        zIndex: 1,
     },
     button: {
         width: 7*vh,
@@ -161,9 +162,10 @@ const styles = StyleSheet.create({
     },
     buildingList: {
         paddingTop: 4*vh,
-        width: 82*vw,
+        width: 84*vw,
         paddingBottom: 50,
         height: 75*vh,
+        marginLeft: 2*vw,
     },
     building: {
         paddingBottom: 3*vh,
@@ -179,13 +181,14 @@ const styles = StyleSheet.create({
         paddingBottom: 2*vh,
         paddingLeft: 10*vw,
         paddingRight: 10*vw,
-        minWidth: 60*vw,
-        textAlign: 'center',
+        width: 82*vw,
     },
     diaryList: {
         paddingBottom: 5*vh,
         paddingTop: 30,
         maxHeight: 60*vh,
+        width: 84*vw,
+        marginLeft: 2*vw,
     },
     diary: {
         borderWidth: 2,
@@ -217,6 +220,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.5)',
         alignItems: 'center',
         justifyContent: 'center',
+        zIndex: 2,
     },
     alertImg: {
         width: 60,
@@ -355,13 +359,17 @@ const styles = StyleSheet.create({
         zIndex: 1,
         transform: [{scale: 3/4}]
     },
+    dateInputContainer: {
+        width: 82*vw,
+        alignItems: 'flex-start',
+    },
     dateInput: {
         backgroundColor: '#474D7B',
         padding: 10,
         flexDirection: 'row',
         justifyContent: 'center',
         borderRadius: 5,
-        minWidth: 70*vw,
+        minWidth: 65*vw,
     },
     dateInputText: {
         color: 'white',
@@ -372,7 +380,6 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     imagePopUpContainer: {
-
         padding: 8*vw,
         backgroundColor: 'white',
     },
