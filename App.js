@@ -5,8 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 /*Pages*/
 import {HomePage,AddBuildingPage,ViewBuildingPage, EditBuildingPage, ViewDiaryPage, AddDiaryPage, EditDiaryPage} from './Pages';
 
-import initialBuildings from './assets/buildings.json';
-
 const App = () => {
   const [loaded] = useFonts({
     'OpenSans': require('./assets/fonts/OpenSans-Regular.ttf'),
@@ -23,7 +21,7 @@ const App = () => {
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('buildings')
-      return jsonValue != null ? JSON.parse(jsonValue) : initialBuildings;
+      return jsonValue != null ? JSON.parse(jsonValue) : [];
     } catch(e) {
       // error reading value
     }
@@ -42,7 +40,12 @@ const App = () => {
     getData().then((data)=>setBuildings(data)); // Read stored data once app renders
   }, [])
 
-  
+  const sortDate = (first, second) => {
+    const firstDate = new Date(first.date);
+    const secondDate = new Date(second.date);    
+
+    return (firstDate < secondDate);
+  }
 
   const addBuilding = (newBuilding) => {
     if(!newBuilding.name){
@@ -52,9 +55,13 @@ const App = () => {
     if (buildings.find(element => element.name === newBuilding.name)){
       throw "exists";
     }
+    
+    let sorted = buildings.concat(newBuilding);
+    sorted.sort((first,next) => first.name > next.name);
 
-    setBuildings(buildings.concat(newBuilding));
-    storeData(buildings);
+    setBuildings(sorted);
+
+    storeData(sorted);
   }
   
   const editBuilding = (newBuilding) => {
@@ -71,11 +78,14 @@ const App = () => {
     const updatedBuilding = Object.assign(buildings[currentBuildingIndex],newBuilding);
     const updatedBuildings = Object.assign(buildings,{[currentBuildingIndex] : updatedBuilding})
 
+    let sorted = updatedBuildings;
+    sorted.sort((first,next) => first.name > next.name);
 
-    setBuildings(updatedBuildings);
+    setBuildings(sorted);
+
     setCurrentBuilding(updatedBuilding);
 
-    storeData(buildings);
+    storeData(sorted);
   }
 
   const removeBuilding = () => {
@@ -106,9 +116,12 @@ const App = () => {
 
     const updatedBuilding = {...currentBuilding,...{diaries: updatedDiaries}};
 
-    editBuilding(updatedBuilding); // Apply changes to main array (buildings)
+    let sorted = updatedBuilding.diaries;
+    sorted.sort(sortDate);
 
-    storeData(buildings);
+    updatedBuilding.diaries = sorted;
+
+    editBuilding(updatedBuilding); // Apply changes to main array (buildings)
   }
 
   const editDiary = (newDiary) => {
@@ -128,10 +141,13 @@ const App = () => {
     let updatedBuilding = currentBuilding;
     updatedBuilding.diaries = updatedDiaries;
 
+    let sorted = updatedBuilding.diaries;
+    sorted.sort(sortDate);
+
+    updatedBuilding.diaries = sorted;
+
     editBuilding(updatedBuilding); // Apply changes to main array (buildings)
     setCurrentDiary(newDiary);
-
-    storeData(buildings);
   }
 
   const removeDiary = () => {
@@ -146,8 +162,6 @@ const App = () => {
     updatedBuilding.diaries = updatedDiaries;
 
     editBuilding(updatedBuilding); // Apply changes to main array (buildings)
-
-    storeData(buildings);
   }
 
   if (!loaded) return null;

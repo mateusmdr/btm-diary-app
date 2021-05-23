@@ -162,10 +162,9 @@ const styles = StyleSheet.create({
     },
     buildingList: {
         paddingTop: 4*vh,
-        width: 84*vw,
+        width: 82*vw,
         paddingBottom: 50,
         height: 75*vh,
-        marginLeft: 2*vw,
     },
     building: {
         paddingBottom: 3*vh,
@@ -185,10 +184,9 @@ const styles = StyleSheet.create({
     },
     diaryList: {
         paddingBottom: 5*vh,
-        paddingTop: 30,
-        maxHeight: 60*vh,
+        paddingTop: 10,
+        maxHeight: 70*vh,
         width: 84*vw,
-        marginLeft: 2*vw,
     },
     diary: {
         borderWidth: 2,

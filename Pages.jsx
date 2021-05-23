@@ -37,15 +37,18 @@ const HomePage = (props) => {
     const [textInput, setTextInput] = useState("");
 
     const renderBuilding = ({item}) => {
-        return(
-            (item.name.toLowerCase().includes(textInput.toLowerCase()) || !textInput) ?
-                (<Building 
-                    item={item} 
-                    setCurrentPage={props.setCurrentPage}
-                    setCurrentBuilding={props.setCurrentBuilding}
-                />)
-            : null
-        );
+        if(item.name){
+            return(
+                (item.name.toLowerCase().includes(textInput.toLowerCase()) || !textInput) ?
+                    (<Building 
+                        item={item} 
+                        setCurrentPage={props.setCurrentPage}
+                        setCurrentBuilding={props.setCurrentBuilding}
+                    />)
+                : null
+            );
+        }
+        return null;
     };
 
     return(
@@ -142,10 +145,7 @@ const Diary = (props) => {
     );
 }
 
-const ViewBuildingPage = (props) => {
-    const [date, setDate] = useState(new Date());
-    const [calendarPopUp, setCalendarPopUp] = useState(false);
-    
+const ViewBuildingPage = (props) => {    
     const renderDiary = ({item}) => {
         return(
             <Diary 
@@ -160,26 +160,6 @@ const ViewBuildingPage = (props) => {
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("home")}/>
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
-            <DateInput
-                onClick={()=> setCalendarPopUp(true)}
-                date={getFullDate(date) + " (" + getWeekDay(date) + ")"}
-            />
-            {calendarPopUp && (
-                <DateTimePicker 
-                    mode={"date"}
-                    value={date}
-                    onChange={(event,value) =>{
-                        if(event.type==="set"){
-                            setCalendarPopUp(false);
-                            setDate(value);
-                        }
-                        if(event.type==="dismissed"){
-                            setCalendarPopUp(false);
-                        }
-                    }}
-                    maximumDate={new Date()}
-                />
-            )}
             <View style={styles.diaryList}>
                 <FlatList 
                     data={props.currentBuilding.diaries} 
