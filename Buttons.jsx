@@ -147,6 +147,7 @@ const ImagePopUp = (props) => {
         props.uri && (
             <TouchableWithoutFeedback onPress={() => props.setImagePopUp(null)}>
                 <View style={styles.popUp}>
+                <TouchableWithoutFeedback>
                 <View style={styles.imagePopUpContainer}>
                     <XButton onClick={() => props.setImagePopUp(null)}/>
                     <Image source={{uri: props.uri}} style={styles.imagePopUp}/>
@@ -167,6 +168,7 @@ const ImagePopUp = (props) => {
                     </View>
                     )}
                 </View>
+                </TouchableWithoutFeedback>
                 </View>
             </TouchableWithoutFeedback>
         )

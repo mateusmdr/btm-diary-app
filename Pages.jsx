@@ -145,14 +145,17 @@ const Diary = (props) => {
     );
 }
 
-const ViewBuildingPage = (props) => {    
+const ViewBuildingPage = (props) => {
+    const [textInput, setTextInput] = useState("");
+
     const renderDiary = ({item}) => {
         return(
+            (item.description.toLowerCase().includes(textInput.toLowerCase()) || !textInput) && (
             <Diary 
                 item={item} 
                 setCurrentPage={props.setCurrentPage}
                 setCurrentDiary={props.setCurrentDiary}
-            />
+            />)
         );
     };
 
@@ -160,6 +163,7 @@ const ViewBuildingPage = (props) => {
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("home")}/>
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
+            <SearchBar onChangeText={setTextInput}/>
             <View style={styles.diaryList}>
                 <FlatList 
                     data={props.currentBuilding.diaries} 
