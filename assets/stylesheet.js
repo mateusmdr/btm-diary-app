@@ -184,9 +184,9 @@ const styles = StyleSheet.create({
     },
     diaryList: {
         paddingBottom: 5*vh,
-        paddingTop: 10,
+        paddingTop: 25,
         maxHeight: 70*vh,
-        width: 84*vw,
+        width: 82*vw,
     },
     diary: {
         borderWidth: 2,
