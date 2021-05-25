@@ -29,7 +29,7 @@
       "package": "com.mateusmendoncadr.btmdiaryapp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.jpg"
     }
   }
 }
