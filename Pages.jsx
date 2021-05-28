@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, StyleSheet, KeyboardAvoidingView,ScrollView} from 'react-native';
+import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, StyleSheet,ScrollView} from 'react-native';
 import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, SubmitButtons,DateInput, ImagePopUp, GaleryImgList} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
@@ -8,7 +8,6 @@ import styles from './assets/stylesheet';
 
 import {getFullDate,getWeekDay} from './lib/utilities.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import InputScrollView from 'react-native-input-scroll-view';
 
 const Page = (props) => {
     return (
