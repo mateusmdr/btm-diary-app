@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderBottomLeftRadius: 6*vw,
-        borderBottomRightRadius: 6*vw,
+        borderBottomLeftRadius: 5.5*vw,
+        borderBottomRightRadius: 5.5*vw,
         marginBottom: 4*vh,
     },
     headerHGroup: {
@@ -75,6 +75,11 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         paddingTop: 25,
     },
+    container: {
+        width: 99*vw,
+        paddingLeft: 8*vw,
+        paddingRight: 9*vw,
+    },  
     textInput: {
         height: 7.8*vh,
         borderColor: '#C2CFD6',
@@ -248,8 +253,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
         borderRadius: 4,
         borderWidth: 1,
-        borderColor: '#303450',
-        color: '#303450',
+        borderColor: '#CFD8DC',
+        color: '#546E7A',
     },
     confirmationDialogView2: {
         width: 30*vw,
@@ -259,13 +264,13 @@ const styles = StyleSheet.create({
     },
     confirmationDialogButton1: {
         textAlign: 'center',
-        padding: 10,
+        padding: 1.8*vh,
         fontFamily: 'OpenSans-Bold',
-        color: '#303450',
+        color: '#546E7A',
     },
     confirmationDialogButton2: {
         textAlign: 'center',
-        padding: 10,
+        padding: 1.8*vh,
         fontFamily: 'OpenSans-Bold',
         color: 'white',
     },
@@ -329,13 +334,14 @@ const styles = StyleSheet.create({
         fontFamily: 'OpenSans',
         fontSize: 16,
         color: '#C2CFD6',
-        textAlign: 'justify',
+        textAlign: 'left',
         paddingTop: 20,
         alignSelf: 'flex-start',
-        maxWidth: 40*vh,
+        width: 82*vw,
+        paddingLeft: 5,
+        marginBottom: 30,
     },
     textInputDiary: {
-        height: 20*vh,
         width: 82*vw,
         borderColor: '#C2CFD6',
         borderWidth: 1.6,
@@ -355,7 +361,6 @@ const styles = StyleSheet.create({
         top: -15,
         right: 0,
         zIndex: 1,
-        transform: [{scale: 3/4}]
     },
     dateInputContainer: {
         width: 82*vw,
@@ -402,15 +407,36 @@ const styles = StyleSheet.create({
     },
     submitButtonsView: {
         flexDirection:'row', 
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         alignItems: 'center',
         width: 100*vw,
         paddingRight: 9*vw,
         paddingLeft: 9*vw,
-        height: 10*vh,
+        height: 7*vh,
         position: 'absolute',
-        bottom: 0
-    }
+        bottom: 0,
+    },
+    editDiaryScrollView: {
+        height: 92*vh,
+        marginBottom: 8*vh,
+        width: 99*vw,
+        paddingLeft: 8*vw,
+        paddingRight: 9*vw,
+    },
+    submitDialogView1: {
+        width: 38*vw,
+        marginRight: 10,
+        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: '#CFD8DC',
+        color: '#546E7A',
+    },
+    submitDialogView2: {
+        width: 38*vw,
+        backgroundColor: '#303450',
+        marginLeft: 10,
+        borderRadius: 4,
+    },
 });
 
 export default styles;

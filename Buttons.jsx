@@ -245,12 +245,12 @@ const SubmitButtons = (props) => {
     return (
         <View style={styles.submitButtonsView}>
             <TouchableOpacity onPress={props.onClick1}>
-                <View style={styles.confirmationDialogView1}>
+                <View style={styles.submitDialogView1}>
                     <Text style={styles.confirmationDialogButton1}>{props.titles[0]}</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={props.onClick2}>
-                <View style={styles.confirmationDialogView2}>
+                <View style={styles.submitDialogView2}>
                     <Text style={styles.confirmationDialogButton2}>{props.titles[1]}</Text>
                 </View>
             </TouchableOpacity>

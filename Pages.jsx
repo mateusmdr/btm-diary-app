@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, StyleSheet, KeyboardAvoidingView,ScrollView} from 'react-native';
 import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, SubmitButtons,DateInput, ImagePopUp, GaleryImgList} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
@@ -8,6 +8,7 @@ import styles from './assets/stylesheet';
 
 import {getFullDate,getWeekDay} from './lib/utilities.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import InputScrollView from 'react-native-input-scroll-view';
 
 const Page = (props) => {
     return (
@@ -270,9 +271,11 @@ const AddDiaryPage = (props) => {
     const [emptyPopUp, setEmptyPopUp] = useState(false);
     const [imagePopUp, setImagePopUp] = useState(null);
 
+    const [height,setHeight] = useState(50);
 
     return (
         <Page>
+        <ScrollView style={styles.container} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled">
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")}/>
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
             <DateInput
@@ -303,20 +306,18 @@ const AddDiaryPage = (props) => {
                 setImagePopUp={setImagePopUp}
                 setImages={setImages}
             />
-
-            <KeyboardAvoidingView 
-                style={styles.textInputView}
-                behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-            >
                 <TextInput 
-                    style={styles.textInputDiary} 
+                    style={StyleSheet.compose(styles.textInputDiary,{height: Math.max(height,150)})} 
                     placeholder="Descrição"
                     onChangeText={setDescription}
-                    multiline={true}
+                    multiline
                     textAlignVertical= "top"
+                    scrollEnabled={false}
+                    onContentSizeChange={(event) => {
+                        setHeight(event.nativeEvent.contentSize.height);
+                    }}
                 />
-            </KeyboardAvoidingView>
-            <SubmitButton 
+                <SubmitButton 
                 title="Salvar" 
                 onClick={() => {
                     try{
@@ -337,27 +338,28 @@ const AddDiaryPage = (props) => {
                     }
                 }}
             />
-            <ImagePopUp
-                uri={imagePopUp}
-                removeButton={true}
-                setImagePopUp={setImagePopUp}
-                setImages={setImages}
-                images={images}
-            />
-            <ErrorDialog
-                onClick={()=> setEmptyPopUp(false)}
-                message= {(
-                    <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Nenhuma descrição foi fornecida</Text>
-                )}
-                condition={emptyPopUp}
-            />
-            <ErrorDialog
-                onClick={() => setExistsPopUp(false)}
-                message= {(
-                    <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Já existe um diário referente a esta data</Text>
-                )}
-                condition={existsPopUp}
-            />
+        </ScrollView>
+        <ImagePopUp
+            uri={imagePopUp}
+            removeButton={true}
+            setImagePopUp={setImagePopUp}
+            setImages={setImages}
+            images={images}
+        />
+        <ErrorDialog
+            onClick={()=> setEmptyPopUp(false)}
+            message= {(
+                <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Nenhuma descrição foi fornecida</Text>
+            )}
+            condition={emptyPopUp}
+        />
+        <ErrorDialog
+            onClick={() => setExistsPopUp(false)}
+            message= {(
+                <Text style={styles.errorDialogMessage}><Text style={styles.bold}>Erro:</Text> Já existe um diário referente a esta data</Text>
+            )}
+            condition={existsPopUp}
+        />
         </Page>
     );
 }
@@ -370,6 +372,7 @@ const ViewDiaryPage = (props) => {
 
     return (
         <Page>
+            <ScrollView style={styles.container}>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
             <Text style={styles.diaryH1}>{diaryDate}</Text>
@@ -380,11 +383,10 @@ const ViewDiaryPage = (props) => {
                 setImagePopUp={setImagePopUp}
             />
             <Text style={styles.diaryDescription}>{props.currentDiary.description}</Text>
-            
+            </ScrollView>
             <View style={styles.buttonList}>
                 <EditButton onClick={() => props.setCurrentPage("editDiary")}/>
             </View>
-
             <ImagePopUp
                 uri={imagePopUp}
                 removeButton={false}
@@ -409,8 +411,11 @@ const EditDiaryPage = (props) => {
     const [existsPopUp,setExistsPopUp] = useState(false);
     const [emptyPopUp,setEmptyPopUp] = useState(false);
 
+    const [height,setHeight] = useState(20);
+
     return (
         <Page>
+            <ScrollView style={styles.editDiaryScrollView}>
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
             <DateInput
@@ -442,14 +447,19 @@ const EditDiaryPage = (props) => {
             />            
 
             <TextInput 
-                style={styles.diaryDescription}
+                style={StyleSheet.compose(styles.textInputDiary,{height: Math.max(height,150)})}
                 defaultValue={props.currentDiary.description}
                 multiline={true}
-                textAlign="center"
+                placeholder="Descrição"
+                textAlign="left"
                 textAlignVertical="top"
                 onChangeText={setTextInput}
+                onContentSizeChange={(event) => {
+                    setHeight(event.nativeEvent.contentSize.height);
+                }}
             />
-
+            
+            </ScrollView>
             <SubmitButtons
                 onClick1={() => {
                     const newDiary = {date: date.toDateString(), description: textInput, images: images};

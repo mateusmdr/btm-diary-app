@@ -56,12 +56,11 @@ const App = () => {
       throw "exists";
     }
     
-    let sorted = buildings.concat(newBuilding);
-    sorted.sort((first,next) => first.name > next.name);
+    let updatedBuildings = [newBuilding].concat(buildings);
 
-    setBuildings(sorted);
+    setBuildings(updatedBuildings);
 
-    storeData(sorted);
+    storeData(updatedBuildings);
   }
   
   const editBuilding = (newBuilding) => {
@@ -72,20 +71,19 @@ const App = () => {
     if (buildings.find(element => element.name === newBuilding.name) && currentBuilding.name !== newBuilding.name){
       throw "exists";
     }
+    const updatedBuilding = Object.assign(currentBuilding,newBuilding);
+    let updatedBuildings = [updatedBuilding];
 
     const currentBuildingIndex = buildings.findIndex(element => element.name === currentBuilding.name);
 
-    const updatedBuilding = Object.assign(buildings[currentBuildingIndex],newBuilding);
-    const updatedBuildings = Object.assign(buildings,{[currentBuildingIndex] : updatedBuilding})
-
-    let sorted = updatedBuildings;
-    sorted.sort((first,next) => first.name > next.name);
-
-    setBuildings(sorted);
+    const firstPart = buildings.slice(0,currentBuildingIndex);
+    const lastPart = buildings.slice(currentBuildingIndex+1);
+    updatedBuildings = updatedBuildings.concat(firstPart.concat(lastPart));
 
     setCurrentBuilding(updatedBuilding);
+    setBuildings(updatedBuildings);
 
-    storeData(sorted);
+    storeData(updatedBuildings);
   }
 
   const removeBuilding = () => {
