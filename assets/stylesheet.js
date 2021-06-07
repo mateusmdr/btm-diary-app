@@ -16,27 +16,32 @@ export function normalize(size) {
 
 const styles = StyleSheet.create({
     safeAreaView: {
-        paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
+        paddingTop: StatusBar.currentHeight,
         display: 'flex',
         alignItems: 'center',
         height: 100*vh,
         position: 'relative',
-        paddingLeft: 9*vw,
-        paddingRight: 9*vw,
+        marginLeft: 9*vw,
+        marginRight: 9*vw,
     },
     bold: {
         fontFamily: 'OpenSans-Bold',
         fontWeight: 'bold',
     },
-    header: {
+    headerContainer: {
+        overflow: 'hidden',
+        borderBottomStartRadius: 5.5*vw,
+        borderBottomEndRadius: 5.5*vw,
+        width: 100*vw,
+        height: 16*vh,
+        marginBottom: 4*vh,
+    },
+    header: {        
         width: 100*vw,
         height: 16*vh,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderBottomLeftRadius: 5.5*vw,
-        borderBottomRightRadius: 5.5*vw,
-        marginBottom: 4*vh,
     },
     headerHGroup: {
         textAlign: 'right',
@@ -55,14 +60,14 @@ const styles = StyleSheet.create({
     title: {
         color: '#474D7B',
         fontFamily: 'OpenSans-Bold',
-        fontSize: 22,
+        fontSize: normalize(22),
         alignSelf: 'flex-start',
         paddingTop: 20,
         paddingBottom: 10,
     },
     subtitle: {
         color: '#C2CFD6',
-        fontSize: 18,
+        fontSize: normalize(18),
         fontFamily: 'OpenSans',
         alignSelf: 'flex-start',
         paddingTop: 15,
@@ -71,7 +76,7 @@ const styles = StyleSheet.create({
         color: '#C2CFD6',
         alignSelf: 'flex-start',
         fontFamily: 'OpenSans-Bold',
-        fontSize: 15,
+        fontSize: normalize(15),
         paddingBottom: 10,
         paddingTop: 25,
     },
@@ -85,6 +90,7 @@ const styles = StyleSheet.create({
         borderColor: '#C2CFD6',
         borderWidth: 1.6,
         borderStyle: 'solid',
+        overflow: 'hidden',
         borderRadius: 4,
         paddingLeft: 5*vw,
         paddingRight: 20,
@@ -102,12 +108,13 @@ const styles = StyleSheet.create({
         borderColor: '#C2CFD6',
         borderWidth: 1.6,
         borderStyle: 'solid',
+        overflow: 'hidden',
         borderRadius: 4,
         paddingLeft: 30+8*vw,
         paddingRight: 20,
         fontSize: normalize(20),
         fontFamily: 'OpenSans',
-        flex: 1,
+        width: 82*vw,
     },
     searchImg: {
         width: 3*vh,
@@ -117,13 +124,14 @@ const styles = StyleSheet.create({
     },
     buttonList: {
         position: 'absolute',
-        right: 4*vw,
+        right: -5*vw,
         bottom: 4*vh,
         zIndex: 1,
     },
     button: {
         width: 7*vh,
         height: 7*vh,
+        overflow: 'hidden',
         borderRadius: 7/2*vh,
         display: 'flex',
         alignItems: 'center',
@@ -158,12 +166,13 @@ const styles = StyleSheet.create({
         padding: 15,
         width: 82*vw,
         alignItems: 'center',
+        overflow: 'hidden',
         borderRadius: 5,
     },
     submitButtonH1: {
         color: 'white',
         fontFamily: 'OpenSans-Bold',
-        fontSize: 18,
+        fontSize: normalize(18),
     },
     buildingList: {
         paddingTop: 4*vh,
@@ -177,8 +186,9 @@ const styles = StyleSheet.create({
     },
     buildingH1: {
         fontFamily: 'OpenSans',
-        fontSize: 18,
+        fontSize: normalize(18),
         borderWidth: 2,
+        overflow: 'hidden',
         borderRadius: 4,
         borderColor: 'rgba(159, 159, 159, 0.25)',
         paddingTop: 2*vh,
@@ -190,11 +200,12 @@ const styles = StyleSheet.create({
     diaryList: {
         paddingBottom: 5*vh,
         paddingTop: 25,
-        maxHeight: 70*vh,
+        maxHeight: 58*vh,
         width: 82*vw,
     },
     diary: {
         borderWidth: 2,
+        overflow: 'hidden',
         borderRadius: 4,
         borderColor: 'rgba(159, 159, 159, 0.25)',
         width: 82*vw,
@@ -207,7 +218,7 @@ const styles = StyleSheet.create({
     diaryH1: {
         color: '#474D7B',
         fontFamily: 'OpenSans-Bold',
-        fontSize: 14,
+        fontSize: normalize(14),
         alignSelf: 'flex-start',
     },
     diaryH2: {
@@ -218,7 +229,7 @@ const styles = StyleSheet.create({
     popUp : {
         width: 100*vw,
         height: 100*vh,
-        marginTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
+        marginTop: StatusBar.currentHeight,
         position: 'absolute',
         backgroundColor: 'rgba(0,0,0,0.5)',
         alignItems: 'center',
@@ -238,11 +249,12 @@ const styles = StyleSheet.create({
         paddingTop: 50,
         paddingBottom: 50,
         justifyContent: 'center',
+        overflow: 'hidden',
         borderRadius: 5,
     },
     confirmationDialogMessage: {
         fontFamily: 'OpenSans',
-        fontSize: 15,
+        fontSize: normalize(15),
         color: '#B3BFC6',
         textAlign: 'center',
         paddingTop: 20,
@@ -251,6 +263,7 @@ const styles = StyleSheet.create({
     confirmationDialogView1: {
         width: 30*vw,
         marginRight: 10,
+        overflow: 'hidden',
         borderRadius: 4,
         borderWidth: 1,
         borderColor: '#CFD8DC',
@@ -260,6 +273,7 @@ const styles = StyleSheet.create({
         width: 30*vw,
         backgroundColor: '#303450',
         marginLeft: 10,
+        overflow: 'hidden',
         borderRadius: 4,
     },
     confirmationDialogButton1: {
@@ -283,11 +297,12 @@ const styles = StyleSheet.create({
         paddingTop: 50,
         paddingBottom: 50,
         justifyContent: 'center',
+        overflow: 'hidden',
         borderRadius: 5,
     },
     errorDialogMessage: {
         fontFamily: 'OpenSans',
-        fontSize: 15,
+        fontSize: normalize(15),
         color: '#B3BFC6',
         textAlign: 'center',
         paddingTop: 20,
@@ -296,6 +311,7 @@ const styles = StyleSheet.create({
     errorDialogView: {
         width: 30*vw,
         backgroundColor: '#303450',
+        overflow: 'hidden',
         borderRadius: 4,
     },
     errorDialogButton: {
@@ -309,6 +325,7 @@ const styles = StyleSheet.create({
         height: 25*vw,
         borderWidth: 2,
         borderColor: '#C2CFD6',
+        overflow: 'hidden',
         borderRadius: 8,
         justifyContent: 'center',
         alignItems: 'center',
@@ -327,12 +344,13 @@ const styles = StyleSheet.create({
     galeryImg: {
         width: 25*vw,
         height: 25*vw,
+        overflow: 'hidden',
         borderRadius: 8,
         marginRight: 15,
     },
     diaryDescription: {
         fontFamily: 'OpenSans',
-        fontSize: 16,
+        fontSize: normalize(16),
         color: '#C2CFD6',
         textAlign: 'left',
         paddingTop: 20,
@@ -346,12 +364,13 @@ const styles = StyleSheet.create({
         borderColor: '#C2CFD6',
         borderWidth: 1.6,
         borderStyle: 'solid',
+        overflow: 'hidden',
         borderRadius: 4,
         paddingLeft: 5*vw,
         paddingRight: 20,
         paddingTop: 20,
-        marginTop: 10,
-        marginBottom: 5,
+        marginTop: 40,
+        marginBottom: 10,
         fontSize: normalize(20),
         fontFamily: 'OpenSans',
         backgroundColor: 'white',
@@ -371,13 +390,14 @@ const styles = StyleSheet.create({
         padding: 10,
         flexDirection: 'row',
         justifyContent: 'center',
+        overflow: 'hidden',
         borderRadius: 5,
         minWidth: 65*vw,
     },
     dateInputText: {
         color: 'white',
         fontFamily: 'OpenSans-Bold',
-        fontSize: 14,
+        fontSize: normalize(14),
     },
     dateSearchImg: {
         marginRight: 10,
@@ -412,9 +432,10 @@ const styles = StyleSheet.create({
         width: 100*vw,
         paddingRight: 9*vw,
         paddingLeft: 9*vw,
-        height: 7*vh,
+        height: 20*vw,
         position: 'absolute',
         bottom: 0,
+        backgroundColor: 'white',
     },
     editDiaryScrollView: {
         height: 92*vh,
@@ -426,6 +447,7 @@ const styles = StyleSheet.create({
     submitDialogView1: {
         width: 38*vw,
         marginRight: 10,
+        overflow: 'hidden',
         borderRadius: 4,
         borderWidth: 1,
         borderColor: '#CFD8DC',
@@ -435,8 +457,16 @@ const styles = StyleSheet.create({
         width: 38*vw,
         backgroundColor: '#303450',
         marginLeft: 10,
+        overflow: 'hidden',
         borderRadius: 4,
     },
+    calendarIOS: {
+        backgroundColor: 'white',
+        borderRadius: 8,
+        overflow: 'hidden',
+        width: 82*vw,
+        height: 25*vh,
+    }
 });
 
 export default styles;

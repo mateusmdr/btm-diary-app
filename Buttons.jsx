@@ -1,10 +1,13 @@
-import React, {useEffect} from 'react';
+import React, {useEffect,useState} from 'react';
 import {StyleSheet,View, TouchableHighlight,TouchableWithoutFeedback, Text,TouchableOpacity,Image, FlatList} from 'react-native';
 import styles from './assets/stylesheet.js';
 
 import {AddImg,EditImg,RemoveImg,ArrowImg,AlertImg,XImg, SearchImg} from './assets/SvgComponents.jsx';
+import {getFullDate,getWeekDay} from './lib/utilities.js';
 
 import * as ImagePicker from 'expo-image-picker';
+
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const AddButton = (props) => {
     return (
@@ -259,4 +262,47 @@ const SubmitButtons = (props) => {
 
 }
 
-export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog, AddGalery, XButton,DateInput,ImagePopUp, GaleryImgList, SubmitButtons};
+const CalendarPopUp = (props) => {
+
+    if(Platform.OS === "android"){
+        return (
+            <>
+                <DateInput
+                    onClick={()=> props.setCalendarPopUp(true)}
+                    date={getFullDate(props.value) + " (" + getWeekDay(props.value) + ")"}
+                />
+                {props.condition && (
+                    <DateTimePicker 
+                        mode={"date"}
+                        value={props.value}
+                        onChange={(event,value) =>{
+                            if(event.type==="set"){
+                                props.setCalendarPopUp(false);
+                                props.setDate(value);
+                            }
+                            if(event.type==="dismissed"){
+                                props.setCalendarPopUp(false);
+                            }
+                        }}
+                        maximumDate={new Date()}
+                    />
+                )}
+            </>
+        );
+    }
+
+    return(
+        <DateTimePicker 
+            mode={"date"}
+            value={props.value}
+            onChange={(event,newDate) => {
+                props.setDate(newDate);
+            }}
+            maximumDate={new Date()}
+
+            style={styles.calendarIOS}
+        />
+    );
+
+}
+export {AddButton,EditButton,RemoveButton,ArrowButton,SubmitButton,ConfirmationDialog,ErrorDialog, AddGalery, XButton,DateInput,ImagePopUp, GaleryImgList, SubmitButtons, CalendarPopUp};

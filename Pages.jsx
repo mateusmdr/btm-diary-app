@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, StyleSheet,ScrollView} from 'react-native';
-import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, SubmitButtons,DateInput, ImagePopUp, GaleryImgList} from './Buttons';
+import {View, Text, TextInput, FlatList, TouchableWithoutFeedback, SafeAreaView, StyleSheet,ScrollView, Keyboard} from 'react-native';
+import {AddButton, EditButton, ArrowButton, RemoveButton, SubmitButton, ConfirmationDialog,ErrorDialog, SubmitButtons,DateInput, ImagePopUp, GaleryImgList, CalendarPopUp} from './Buttons';
 import {SearchBar} from './Inputs';
 import Header from './Header';
 
 import styles from './assets/stylesheet';
 
 import {getFullDate,getWeekDay} from './lib/utilities.js';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Page = (props) => {
     return (
@@ -59,6 +58,7 @@ const HomePage = (props) => {
                     data={props.buildings} 
                     renderItem={renderBuilding}
                     keyExtractor={(item) => item.name}
+                    scrollIndicatorInsets={{ right: -2 }}
                 />
             </View>
             <View style={styles.buttonList}>
@@ -169,7 +169,7 @@ const ViewBuildingPage = (props) => {
                     data={props.currentBuilding.diaries} 
                     renderItem={renderDiary}
                     keyExtractor={(item) => getFullDate(new Date(item.date))}
-                    scrollIndicatorInsets={{ right: 100 }}
+                    scrollIndicatorInsets={{ right: -2 }}
                 />
             </View>
             <View style={styles.buttonList}>
@@ -277,28 +277,13 @@ const AddDiaryPage = (props) => {
         <ScrollView style={styles.container} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled">
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")}/>
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
-            <DateInput
-                onClick={()=> setCalendarPopUp(true)}
-                date={getFullDate(date) + " (" + getWeekDay(date) + ")"}
+            <CalendarPopUp
+                condition={calendarPopUp}
+                value={date}
+                setCalendarPopUp={setCalendarPopUp}
+                setDate={setDate}
             />
-            {calendarPopUp && (
-                <DateTimePicker 
-                    mode={"date"}
-                    value={date}
-                    onChange={(event,value) =>{
-                        if(event.type==="set"){
-                            setCalendarPopUp(false);
-                            setDate(value);
-                        }
-                        if(event.type==="dismissed"){
-                            setCalendarPopUp(false);
-                        }
-                    }}
-                    maximumDate={new Date()}
-                />
-            )}
             <Text style={styles.subtitle}>Galeria</Text>
-
             <GaleryImgList
                 addButton={true}
                 images={images}
@@ -306,7 +291,7 @@ const AddDiaryPage = (props) => {
                 setImages={setImages}
             />
                 <TextInput 
-                    style={StyleSheet.compose(styles.textInputDiary,{height: Math.max(height,150)})} 
+                    style={StyleSheet.compose(styles.textInputDiary,{height: Math.max(height,300)})} 
                     placeholder="Descrição"
                     onChangeText={setDescription}
                     multiline
@@ -315,6 +300,7 @@ const AddDiaryPage = (props) => {
                     onContentSizeChange={(event) => {
                         setHeight(event.nativeEvent.contentSize.height);
                     }}
+                    onSubmitEditing={Keyboard.dismiss}
                 />
                 <SubmitButton 
                 title="Salvar" 
@@ -414,30 +400,15 @@ const EditDiaryPage = (props) => {
 
     return (
         <Page>
-            <ScrollView style={styles.editDiaryScrollView}>
+            <ScrollView style={styles.editDiaryScrollView} keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled">
             <ArrowButton onClick={() => props.setCurrentPage("viewBuilding")} />
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
-            <DateInput
-                onClick={()=> setCalendarPopUp(true)}
-                date={getFullDate(date) + " (" + getWeekDay(date) + ")"}
+            <CalendarPopUp
+                condition={calendarPopUp}
+                value={date}
+                setCalendarPopUp={setCalendarPopUp}
+                setDate={setDate}
             />
-            {calendarPopUp && (
-                <DateTimePicker 
-                    mode={"date"}
-                    value={date}
-                    onChange={(event,value) =>{
-                        if(event.type==="set"){
-                            setCalendarPopUp(false);
-                            setDate(value);
-                        }
-                        if(event.type==="dismissed"){
-                            setCalendarPopUp(false);
-                        }
-                    }}
-                    maximumDate={new Date()}
-                />
-            )}
-
             <GaleryImgList
                 images={images}
                 addButton={true}
@@ -446,7 +417,7 @@ const EditDiaryPage = (props) => {
             />            
 
             <TextInput 
-                style={StyleSheet.compose(styles.textInputDiary,{height: Math.max(height,150)})}
+                style={StyleSheet.compose(styles.textInputDiary,{height: Math.max(height,300)})}
                 defaultValue={props.currentDiary.description}
                 multiline={true}
                 placeholder="Descrição"
@@ -456,6 +427,7 @@ const EditDiaryPage = (props) => {
                 onContentSizeChange={(event) => {
                     setHeight(event.nativeEvent.contentSize.height);
                 }}
+                onSubmitEditing={Keyboard.dismiss}
             />
             
             </ScrollView>
