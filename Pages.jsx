@@ -52,7 +52,8 @@ const HomePage = (props) => {
 
     return(
         <Page>
-            <SearchBar onChangeText={setTextInput}/>
+            {(props.buildings.length > 0) && 
+            <SearchBar onChangeText={setTextInput}/>}
             <View style={styles.buildingList}>
                 <FlatList 
                     data={props.buildings} 
@@ -163,7 +164,8 @@ const ViewBuildingPage = (props) => {
         <Page>
             <ArrowButton onClick={() => props.setCurrentPage("home")}/>
             <Text style={styles.title}>{props.currentBuilding.name}</Text>
-            <SearchBar onChangeText={setTextInput}/>
+            {(props.currentBuilding.diaries.length > 0) && 
+            <SearchBar onChangeText={setTextInput}/>}
             <View style={styles.diaryList}>
                 <FlatList 
                     data={props.currentBuilding.diaries} 
